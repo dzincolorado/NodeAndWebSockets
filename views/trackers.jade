@@ -2,13 +2,20 @@ extends layout
 
 block content
 	h3 Current 24 hours
-	
-	div(id="slider-range")
-	
-	input(type="text", id="minutes", style="border:0; color:#f6931f; font-weight:bold;")
+
+	ol(data-bind="foreach: trackers", class="ui-selectable", id="olTrackers")
+		//- li(class="ui-widget-content")
+		li
+			div(data-bind="attr: {id: 'slider-range' + trackerId}")
+			input(type="text", data-bind="attr: {id: 'txtMinutes' + trackerId}", class="sliderValue")
 	
 	div
 		button(id="btnTrackAnother") Track Another
 		
 	div(id="wrpTrackAnother", title="Track Another")
-		dialog
+		div(id="slider-range")
+		input(type="text", id="txtMinutes", class="sliderValue")
+		label(for="txtActivity") Activity:
+			input(type="text", id="txtActivity")
+			div
+				button(id="btnTrackNew") Track
