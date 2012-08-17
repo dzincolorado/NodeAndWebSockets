@@ -21,11 +21,18 @@ function TrackerViewModel(){
 	}
 }
 
-function ConfigureTracker(id, startMinute, endMinute){
+function ConfigureTracker(id, startMinute, endMinute, activity){
 	$(function() {
 		var sliderRangeId ="#slider-range" + id; 
 		var txtMinutesId ="#txtMinutes" + id;
 		//alert($( sliderRangeId ).slider( "values", 1 ));
+		
+		if(typeof activity != "undefined"){
+			activity += " - "; 
+		}
+		else {
+			activity = ""; 	
+		}
 		 
 		$( sliderRangeId ).slider({
 			range: true,
@@ -34,11 +41,13 @@ function ConfigureTracker(id, startMinute, endMinute){
 			step: 5,
 			values: [ startMinute, endMinute ],
 			slide: function( event, ui ) {
-				$( txtMinutesId ).val(ui.values[ 1 ] - ui.values[ 0 ] + " minutes" );
+				var minutes = ui.values[ 1 ] - ui.values[ 0 ];
+				$( txtMinutesId ).text(activity + minutes + " minutes" );
 			}
 		});
-		$( txtMinutesId ).val($( sliderRangeId ).slider( "values", 1 ) - 
-			$( sliderRangeId ).slider( "values", 0 ) + " minutes");
+		
+		var minutes = $( sliderRangeId ).slider( "values", 1 ) - $( sliderRangeId ).slider( "values", 0 );
+		$( txtMinutesId ).text(activity + minutes.toString() + " minutes");
 	});
 }
 
@@ -68,7 +77,7 @@ function ConfigureTrackNewButton(){
 		
 		trackerId++;
 		model.addTracker(trackerId, startMinute, endMinute, activity);
-		ConfigureTracker(trackerId, startMinute, endMinute);
+		ConfigureTracker(trackerId, startMinute, endMinute, activity);
 		
 		$( "#wrpTrackAnother" ).dialog( "close" );
 		return false;

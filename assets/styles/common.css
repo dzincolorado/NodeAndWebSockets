@@ -1,5 +1,5 @@
 .sliderValue{
-	border:0; color:#f6931f; font-weight:bold;
+	border:0; color:#f6931f; font-weight:bold;height:40px;padding-top: 10px;	
 }
 
 .ui-selectable .ui-selecting { background: #FECA40; }
