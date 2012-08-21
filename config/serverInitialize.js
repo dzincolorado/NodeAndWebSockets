@@ -1,7 +1,8 @@
 module.exports = function(express, passport){
-	var expressServer = express.createServer();
-	expressServer.listen(process.env.PORT || 8000);
-	console.log("Listening on: " + expressServer.address().port);
+	var expressServer = express();
+	var port = 8000;
+	expressServer.listen(process.env.PORT || port);
+	console.log("Listening on: " + port);
 	
 	expressServer.set("views", __dirname + "/../views");
 	expressServer.set("view engine", "jade");

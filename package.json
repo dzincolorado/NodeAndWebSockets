@@ -2,13 +2,13 @@
   "name": "Node-and-web-sockets",
   "version": "0.0.1-1",
   "dependencies": {
-    "express": ">= 2.5.10",
+    "express": ">= 3.x",
     "passport": ">= 0.0.0",
     "passport-twitter": ">= 0.0.0",
     "mongojs": ">= 0.3.2"
   },
   "engines": {
-    "node": ">= 0.6.14",
+    "node": ">= 0.8.x",
     "npm": ">= 1.0.0"
   },
   "subdomain": "trackers.nodejitsu.com",
