@@ -10,12 +10,12 @@ block content
 			div(data-bind="attr: {id: 'txtMinutes' + trackerId}", class="sliderValue")
 	
 	div
-		button(id="btnTrackAnother") Track Another
+		button(id="btnTrackAnother", class="btn btn-primary") Track Another
 		
 	div(id="wrpTrackAnother", title="Track Another")
 		div(id="slider-range")
 		div(id="txtMinutes", class="sliderValue")
 		label(for="txtActivity") Activity:
-			input(type="text", id="txtActivity")
-			div
-				button(id="btnTrackNew") Track
+			input(type="text", id="txtActivity", style="float:right")
+			div(class="wrpButton")
+				button(id="btnTrackNew", class="btn btn-primary") Start tracking

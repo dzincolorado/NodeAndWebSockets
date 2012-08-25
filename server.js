@@ -6,7 +6,6 @@ var routeCallbacks = require("./routes/routeCallbacks");
 //TODO: need facebook, linkedin auth strategy
 //TODO:  hookup mongo (mongojs or mongoose)
 //TODO: configure sockets and cluster processes
-//TODO: need package.json
 
 //require("./handlers/authentication")(passport, passportTwitterStrategy, config);
 var expressServer = require("./config/serverInitialize")(express, passport);
