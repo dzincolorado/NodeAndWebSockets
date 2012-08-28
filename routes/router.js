@@ -1,8 +1,6 @@
-var trackersDB = require("mongojs").connect("trackers");
+var activity = require("../db/db").activity();
 //var s = require("string") //TODO: npm install --production string
 //var nodeCache = require("memory-cache");//TODO:npm install memory-cache, node-cache
-
-//TODO: install migrations?  npm install migrate
 
 module.exports = function(expressServer, passport, routeCallbacks){
 	expressServer.get("/", function(request, response){
@@ -16,13 +14,21 @@ module.exports = function(expressServer, passport, routeCallbacks){
 		//TODO: trim term
 		var term = request.query.term;
 		
-		if(term.length > 0){
-			//var activities = trackersDB.collection("Activity")
-			//activities.find({"name": term})
-			//activities.save(request.query.term))
-			
-			var suggestedValues = ["test1", "test2"];
-			response.write(JSON.stringify(suggestedValues));
+		if(term.length > 2){
+			activity.find({"name": "/#{term}/i"}, function(err, docs){
+				if(docs.length == 0){
+					//activity.save(request.query.term))	
+				}
+				
+				console.log(docs.length);
+				
+				var suggestedValues = ["test1", "test2"];
+				response.write(JSON.stringify(suggestedValues));
+				response.end();	
+			});
+		}
+		else
+		{
 			response.end();
 		}
 	})
