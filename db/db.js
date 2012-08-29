@@ -9,5 +9,10 @@ function activity(){
 	return db().collection("activity");
 }
 
+function userActivity(){
+	return db().collection("userActivity");
+}
+
 exports.db = db;//create separate module for exposing db
 exports.activity = activity;
+exports.userActivity = userActivity;

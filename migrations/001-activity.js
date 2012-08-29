@@ -16,17 +16,18 @@ exports.up = function(next){
 		docs.push({"name": "yard work", "addedDate": new Date()});
 		docs.push({"name": "building", "addedDate": new Date()});
 		
-		collection.insert(docs);	
+		collection.insert(docs);
+		
+		//setup the index
+		collection.ensureIndex({"name":1});
+	  	next();	
 	});
-	
-	//setup the index
-	db.activity().ensureIndex({"name":1});
-  next();
 };
 
 exports.down = function(next){
 	db.dropCollection("activity", function(err){
 		console.log("activity collection dropped");
+		
+		next();
 	});
-  next();
 };

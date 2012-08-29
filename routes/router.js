@@ -15,14 +15,18 @@ module.exports = function(expressServer, passport, routeCallbacks){
 		var term = request.query.term;
 		
 		if(term.length > 2){
-			activity.find({"name": "/#{term}/i"}, function(err, docs){
+			activity.find({"name": {"$regex" : "(" + term + ")"}}, function(err, docs){
 				if(docs.length == 0){
 					//activity.save(request.query.term))	
 				}
 				
 				console.log(docs.length);
 				
-				var suggestedValues = ["test1", "test2"];
+				var suggestedValues = [];
+				docs.forEach(function(doc){
+					suggestedValues.push(doc["name"]);
+				});
+				
 				response.write(JSON.stringify(suggestedValues));
 				response.end();	
 			});
