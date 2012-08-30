@@ -21,7 +21,7 @@ function TrackerViewModel(){
 	}
 }
 
-function ConfigureTracker(id, startMinute, endMinute, activity){
+function configureTracker(id, startMinute, endMinute, activity){
 	$(function() {
 		var sliderRangeId ="#slider-range" + id; 
 		var txtMinutesId ="#txtMinutes" + id;
@@ -51,7 +51,7 @@ function ConfigureTracker(id, startMinute, endMinute, activity){
 	});
 }
 
-function ConfigureTrackAnotherButton(){
+function configureTrackAnotherButton(){
 	//configure fx speeds
 	$.fx.speeds._default = 300;
 	$(function() {
@@ -68,7 +68,7 @@ function ConfigureTrackAnotherButton(){
 	});
 }
 
-function ConfigureTrackNewButton(){
+function configureTrackNewButton(){
 	$( "#btnTrackNew" ).click(function() {
 		
 		var startMinute = $("#slider-range" ).slider("values", 0 );
@@ -84,11 +84,11 @@ function ConfigureTrackNewButton(){
 	});
 }
 
-function ConfigureDataBindings(){
+function configureDataBindings(){
 	ko.applyBindings(model);
 }
 
-function ConfigureAutoComplete(){
+function configureAutoComplete(){
 	//configure autocomplete
 	$(function() {
 		var cache = {},
@@ -113,15 +113,21 @@ function ConfigureAutoComplete(){
 	});
 }
 
+function getLookupData(){
+	$.getJSON("lookup/emotion", function(data, status, xhr){
+		alert(data);
+	});
+}
+
 
 var model = new TrackerViewModel();
 //setup event handlers
 $(document).ready(function(){
 	
-	ConfigureDataBindings();
-	ConfigureTracker("", 0, 5);
-	ConfigureTrackAnotherButton();
-	ConfigureTrackNewButton();
-	ConfigureAutoComplete();
-	
+	configureDataBindings();
+	configureTracker("", 0, 5);
+	configureTrackAnotherButton();
+	configureTrackNewButton();
+	configureAutoComplete();
+	getLookupData();
 })

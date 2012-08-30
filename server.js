@@ -9,4 +9,6 @@ var routeCallbacks = require("./routes/routeCallbacks");
 
 //require("./handlers/authentication")(passport, passportTwitterStrategy, config);
 var expressServer = require("./config/serverInitialize")(express, passport);
+//setup socket.io
+var io = require("socket.io").listen(expressServer);
 require("./routes/router")(expressServer, passport, routeCallbacks);

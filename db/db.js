@@ -13,6 +13,11 @@ function userActivity(){
 	return db().collection("userActivity");
 }
 
+function emotion(){
+	return db().collection("emotion");
+}
+
 exports.db = db;//create separate module for exposing db
 exports.activity = activity;
 exports.userActivity = userActivity;
+exports.emotion = emotion;
