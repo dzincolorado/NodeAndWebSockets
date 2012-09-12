@@ -47,6 +47,10 @@ function lookup(request, response){
 	response.end();
 }	
 
+function lookupCallback(){
+	
+}
+
 exports.index = index;
 exports.autoComplete = autoComplete;
 exports.lookup = lookup;

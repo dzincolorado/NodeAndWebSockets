@@ -16,7 +16,9 @@ function TrackerViewModel(){
 	
 	self.addTracker = function(id, startMinute, endMinute, activity){
 		self.trackers.push(new Tracker(id, startMinute, endMinute, activity));
-		
+	
+		//TODO: need to hook up emotionvalue
+		SaveTrackerInfo(startMinute, endMinute, activity, 5);
 		//TODO:  need to reset activity and slider values
 	}
 }
@@ -115,6 +117,15 @@ function configureAutoComplete(){
 
 function getLookupData(){
 	$.getJSON("lookup/emotion", function(data, status, xhr){
+		alert('lookup data: ' + data);
+	});
+}
+
+function SaveTrackerInfo(startMinute, endMinute, activity, emotionValue){
+	var socket = io.connect("http://localhost");
+	
+	socket.emit("saveTrackerInfo", {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue});
+	socket.on("userTrackerUpdate", function(data){
 		alert(data);
 	});
 }
