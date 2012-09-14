@@ -16,6 +16,9 @@ block content
 		div(id="slider-range")
 		div(id="txtMinutes", class="sliderValue")
 		label(for="txtActivity") Activity:
-			input(type="text", id="txtActivity", style="float:right")
+			input(type="text", id="txtActivity", class="rightColumn")
+		div(class="divider")
+		label(for="ddlEmotion") Emotional State: 
+			select(id="ddlEmotion", data-bind="options: emotionValues, optionsText: 'name', value: 'value'", class="rightColumn")
 			div(class="wrpButton")
 				button(id="btnTrackNew", class="btn btn-primary") Start tracking

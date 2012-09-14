@@ -1,12 +1,12 @@
 var db = require("../db/db");
 
-function getLookup(lookupType, lookupList){
-	//var lookupList = [];
+function getLookup(lookupType, sendResponse){
+	var lookupList = [];
 	
 	console.log(lookupType);
 	
 	if(lookupType.trim().length == 0){
-		return lookupList;
+		sendResponse(JSON.stringify(lookupList));
 	}
 	else if(lookupType.toLowerCase().trim() == "emotion"){
 		db.emotion().find({}, function(err, docs){
@@ -16,7 +16,8 @@ function getLookup(lookupType, lookupList){
 			
 			console.log("about to return lookup list");
 			
-			return lookupList;
+			console.log("writing list to response stream");
+			sendResponse(null, JSON.stringify(lookupList));
 		});
 	}
 }

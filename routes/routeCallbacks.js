@@ -1,5 +1,6 @@
 var activity = require("../db/db").activity();
 var lookupHelper = require("../helpers/lookup");
+var responseHelper = require("../helpers/response");
 
 function index(request, response){
 	response.render("trackers", {locals: {}});
@@ -37,19 +38,8 @@ function autoComplete(request, response){
 
 function lookup(request, response){
 	var lookupType = request.params.type;
-	
-	var lookupList = [];
-	//TODO: need to create as callback since lines are running out of order
-	lookupHelper.getLookup(lookupType, lookupList);
-	console.log(lookupList);
-	response.write(JSON.stringify(lookupList));
-	console.log("wrote lookup list to response");
-	response.end();
+	lookupHelper.getLookup(lookupType, responseHelper.makeSendResponse(response));
 }	
-
-function lookupCallback(){
-	
-}
 
 exports.index = index;
 exports.autoComplete = autoComplete;

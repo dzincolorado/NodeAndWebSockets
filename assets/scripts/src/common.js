@@ -23,6 +23,19 @@ function TrackerViewModel(){
 	}
 }
 
+function Emotion(name, value, color){
+	var self = this;
+	
+	self.name = ko.observable(name);
+	self.value = ko.observable(value);
+	self.color = ko.observable(color);
+}
+
+function EmotionViewModel(){
+	var self = this;
+	self.emotionValues = ko.observableArray([]);
+}
+
 function configureTracker(id, startMinute, endMinute, activity){
 	$(function() {
 		var sliderRangeId ="#slider-range" + id; 
@@ -60,7 +73,8 @@ function configureTrackAnotherButton(){
 		$( "#wrpTrackAnother" ).dialog({
 			autoOpen: false,
 			show: {effect: 'drop', direction: 'up'},
-			hide: {effect: 'drop', direction: 'up'}
+			hide: {effect: 'drop', direction: 'up'},
+			width: 450
 		});
 
 		$( "#btnTrackAnother" ).click(function() {
@@ -79,7 +93,7 @@ function configureTrackNewButton(){
 		
 		trackerId++;
 		model.addTracker(trackerId, startMinute, endMinute, activity);
-		ConfigureTracker(trackerId, startMinute, endMinute, activity);
+		configureTracker(trackerId, startMinute, endMinute, activity);
 		
 		$( "#wrpTrackAnother" ).dialog( "close" );
 		return false;
@@ -87,7 +101,8 @@ function configureTrackNewButton(){
 }
 
 function configureDataBindings(){
-	ko.applyBindings(model);
+	ko.applyBindings(model, document.getElementById("olTrackers"));
+	ko.applyBindings(emotionModel, document.getElementById("ddlEmotion"));
 }
 
 function configureAutoComplete(){
@@ -115,9 +130,14 @@ function configureAutoComplete(){
 	});
 }
 
+var emotionModel = new EmotionViewModel();
 function getLookupData(){
 	$.getJSON("lookup/emotion", function(data, status, xhr){
-		alert('lookup data: ' + data);
+		var mappedData = ko.utils.arrayMap(data, function(item){
+			return new Emotion(item["name"], item["value"], item["color"])
+		});
+		
+		emotionModel.emotionValues(mappedData);
 	});
 }
 
