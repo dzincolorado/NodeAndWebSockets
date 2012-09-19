@@ -1,8 +1,5 @@
 module.exports = function(express, passport){
 	var expressServer = express();
-	var port = process.env.PORT || 8000;
-	expressServer.listen(port);
-	console.log("Listening on: %d, environment: '%s'", port, expressServer.settings.env);
 	
 	expressServer.configure("development", function(){
 		//Dev will just use the default localhost
@@ -35,6 +32,9 @@ module.exports = function(express, passport){
 	expressServer.use(passport.session());
 	expressServer.use(expressServer.router);
 	expressServer.use(express.static(__dirname + "/../assets"));
+	
+	var port = process.env.PORT || 8000;
+	console.log("Listening on: %d, environment: '%s'", port, expressServer.settings.env);
 	
 	//setup socket.io
 	var http = require('http');
