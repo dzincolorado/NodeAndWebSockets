@@ -1,8 +1,24 @@
 module.exports = function(express, passport){
 	var expressServer = express();
-	var port = 8000;
-	//expressServer.listen(process.env.PORT || port);
-	console.log("Listening on: " + port);
+	var port = process.env.PORT || 8000;
+	expressServer.listen(port);
+	console.log("Listening on: %d, environment: '%s'", port, expressServer.settings.env);
+	
+	expressServer.configure("development", function(){
+		//Dev will just use the default localhost
+		//expressServer.configure("db-uri", "mongodb://localhost/trackers");
+	});
+	
+	expressServer.configure("production", function(){
+		
+		//get the environment variable set by:  heroku config | grep MONGOLAB_URI
+		//MONGOLAB_URI => mongodb://<USER>:<PW>@alex.mongohq.com:10076/app6890420 (Heroku MongoHq)
+		//MONGOLAB_URI => mongodb://<USER>:<PW>@ds037587-a.mongolab.com:37587/trackers (MongoLab)
+		//MONGOLAB_URI => mongodb://<USER>:<PW>@ds037607-a.mongolab.com:37607/heroku_app6890420 (Heroku MongoLab)
+		var dbConnection = process.env.MONGOLABLIFE_URI;
+		
+		expressServer.configure("db-uri", dbConnection)
+	});
 	
 	expressServer.set("views", __dirname + "/../views");
 	expressServer.set("view engine", "jade");
