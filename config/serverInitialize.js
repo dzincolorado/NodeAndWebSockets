@@ -11,7 +11,7 @@ module.exports = function(express, passport){
 		//get the environment variable set by:  heroku config | grep MONGOLAB_URI
 		//MONGOLAB_URI => mongodb://<USER>:<PW>@alex.mongohq.com:10076/app6890420 (Heroku MongoHq)
 		//MONGOLAB_URI => mongodb://<USER>:<PW>@ds037587-a.mongolab.com:37587/trackers (MongoLab)
-		//MONGOLAB_URI => mongodb://<USER>:<PW>@ds037607-a.mongolab.com:37607/heroku_app6890420 (Heroku MongoLab)
+		//MONGOLAB_URI => mongodb://<USER>:<PW>@dbh86-a.mongolab.com:27867/trackers (Heroku MongoLab)
 		var dbConnection = process.env.MONGOLABLIFE_URI;
 		
 		expressServer.configure("db-uri", dbConnection)
