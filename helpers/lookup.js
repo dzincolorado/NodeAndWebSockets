@@ -1,6 +1,6 @@
 var db = require("../db/db");
 
-function getLookup(lookupType, sendResponse){
+function getLookup(lookupType, sendResponse, expressServer){
 	var lookupList = [];
 	
 	console.log(lookupType);
@@ -9,7 +9,8 @@ function getLookup(lookupType, sendResponse){
 		sendResponse(JSON.stringify(lookupList));
 	}
 	else if(lookupType.toLowerCase().trim() == "emotion"){
-		db.emotion().find({}, function(err, docs){
+		var db2 = new db.db2(expressServer);
+		db2.emotion().find({}, function(err, docs){
 			docs.forEach(function(doc){
 				lookupList.push(doc);
 			});

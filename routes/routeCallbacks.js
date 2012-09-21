@@ -1,4 +1,4 @@
-var activity = require("../db/db").activity();
+var db = require("../db/db");
 var lookupHelper = require("../helpers/lookup");
 var responseHelper = require("../helpers/response");
 
@@ -6,7 +6,7 @@ function index(request, response){
 	response.render("trackers", {locals: {}});
 }
 
-function autoComplete(request, response){
+function autoComplete(request, response, expressServer){
 	
 	response.writeHead(200, {"content-type":"text/plain"});
 	
@@ -14,7 +14,8 @@ function autoComplete(request, response){
 	var term = request.query.term;
 	
 	if(term.length > 2){
-		activity.find({"name": {"$regex" : "(" + term + ")"}}, function(err, docs){
+		var db2 = new db.db2(expressServer);
+		db2.activity().find({"name": {"$regex" : "(" + term + ")"}}, function(err, docs){
 			if(docs.length == 0){
 				//activity.save(request.query.term))	
 			}
@@ -36,9 +37,9 @@ function autoComplete(request, response){
 	}
 }
 
-function lookup(request, response){
+function lookup(request, response, expressServer){
 	var lookupType = request.params.type;
-	lookupHelper.getLookup(lookupType, responseHelper.makeSendResponse(response));
+	lookupHelper.getLookup(lookupType, responseHelper.makeSendResponse(response), expressServer);
 }	
 
 exports.index = index;

@@ -142,7 +142,7 @@ function getLookupData(){
 }
 
 function SaveTrackerInfo(startMinute, endMinute, activity, emotionValue){
-	var socket = io.connect("http://localhost");
+	var socket = io.connect(window.location.hostname);
 	
 	socket.emit("saveTrackerInfo", {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue});
 	socket.on("userTrackerUpdate", function(data){

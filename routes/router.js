@@ -5,10 +5,14 @@ var routeCallbacks = require("./routeCallbacks");
 module.exports = function(expressServer, passport){
 	
 	//autocomplete
-	expressServer.get("/autocomplete", routeCallbacks.autoComplete);
+	expressServer.get("/autocomplete", function(request, response){
+			routeCallbacks.autoComplete(request, response, expressServer);
+		});
 	
 	//get lookup
-	expressServer.get("/lookup/:type", routeCallbacks.lookup);
+	expressServer.get("/lookup/:type", function(request, response){
+		routeCallbacks.lookup(request, response, expressServer);
+		});
 	
 	//index
 	expressServer.get("/", routeCallbacks.index);

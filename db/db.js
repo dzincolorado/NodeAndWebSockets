@@ -1,23 +1,18 @@
-function db(){
+function db2(expressServer){
+	var trackersDb = require("mongojs").connect(expressServer.get("db-uri"));
+	var self = this;
 	
-	//TODO:  need to understand implications of calling this over and over
-	//TODO: consider using node-mongoskin instead of mongojs
-	return require("mongojs").connect("trackers");
+	self.activity = function(){
+		return trackersDb.collection("activity");
+	};
+	
+	self.userActivity = function(){
+		return trackersDb.collection("userActivity");
+	};
+	
+	self.emotion = function(){
+		return trackersDb.collection("emotion");	
+	}
 }
 
-function activity(){
-	return db().collection("activity");
-}
-
-function userActivity(){
-	return db().collection("userActivity");
-}
-
-function emotion(){
-	return db().collection("emotion");
-}
-
-exports.db = db;//create separate module for exposing db
-exports.activity = activity;
-exports.userActivity = userActivity;
-exports.emotion = emotion;
+exports.db2 = db2;

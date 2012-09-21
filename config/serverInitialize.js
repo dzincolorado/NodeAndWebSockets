@@ -3,7 +3,7 @@ module.exports = function(express, passport){
 	
 	expressServer.configure("development", function(){
 		//Dev will just use the default localhost
-		//expressServer.configure("db-uri", "mongodb://localhost/trackers");
+		expressServer.set("db-uri", "mongodb://localhost/trackers");
 	});
 	
 	expressServer.configure("production", function(){
@@ -14,7 +14,7 @@ module.exports = function(express, passport){
 		//MONGOLAB_URI => mongodb://<USER>:<PW>@dbh86-a.mongolab.com:27867/trackers (Heroku MongoLab)
 		var dbConnection = process.env.MONGOLABLIFE_URI;
 		
-		expressServer.configure("db-uri", dbConnection)
+		expressServer.set("db-uri", dbConnection)
 	});
 	
 	expressServer.set("views", __dirname + "/../views");
