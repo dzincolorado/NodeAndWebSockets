@@ -146,7 +146,7 @@ function SaveTrackerInfo(startMinute, endMinute, activity, emotionValue){
 	
 	socket.emit("saveTrackerInfo", {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue});
 	socket.on("userTrackerUpdate", function(data){
-		alert(data);
+		//alert(data);
 	});
 }
 
