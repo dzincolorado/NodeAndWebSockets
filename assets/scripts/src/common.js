@@ -94,6 +94,7 @@ function configureTrackNewButton(){
 		trackerId++;
 		model.addTracker(trackerId, startMinute, endMinute, activity);
 		configureTracker(trackerId, startMinute, endMinute, activity);
+		updateAverage();
 		
 		$( "#wrpTrackAnother" ).dialog( "close" );
 		return false;
@@ -150,6 +151,15 @@ function SaveTrackerInfo(startMinute, endMinute, activity, emotionValue){
 	});
 }
 
+function updateAverage(){
+	
+	var effect = "drop";
+	if(model.trackers().length > 1){
+		effect = "highlight";
+	}
+	
+	$( "#wrpRunningAvg" ).show(effect, null, 1000, null );
+}
 
 var model = new TrackerViewModel();
 //setup event handlers
@@ -161,4 +171,5 @@ $(document).ready(function(){
 	configureTrackNewButton();
 	configureAutoComplete();
 	getLookupData();
+	$("#wrpRunningAvg").hide();
 })

@@ -3,6 +3,9 @@ extends layout
 block content
 	h3 Current 24 hours
 
+	div(class="alert alert-info", id="wrpRunningAvg") Average:
+		div(class="rightColumn") 0000
+
 	ol(data-bind="foreach: trackers", class="ui-selectable", id="olTrackers")
 		//- li(class="ui-widget-content")
 		li
