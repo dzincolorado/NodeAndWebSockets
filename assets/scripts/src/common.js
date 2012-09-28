@@ -18,7 +18,7 @@ function TrackerViewModel(){
 		self.trackers.push(new Tracker(id, startMinute, endMinute, activity));
 	
 		//TODO: need to hook up emotionvalue
-		SaveTrackerInfo(startMinute, endMinute, activity, 5);
+		saveTrackerInfo(startMinute, endMinute, activity, 5);
 		//TODO:  need to reset activity and slider values
 	}
 }
@@ -36,10 +36,11 @@ function EmotionViewModel(){
 	self.emotionValues = ko.observableArray([]);
 }
 
-function configureTracker(id, startMinute, endMinute, activity){
+function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 	$(function() {
 		var sliderRangeId ="#slider-range" + id; 
 		var txtMinutesId ="#txtMinutes" + id;
+		var txtEmotionValueId = "#txtEmotionValue" + id;
 		//alert($( sliderRangeId ).slider( "values", 1 ));
 		
 		if(typeof activity != "undefined"){
@@ -63,6 +64,7 @@ function configureTracker(id, startMinute, endMinute, activity){
 		
 		var minutes = $( sliderRangeId ).slider( "values", 1 ) - $( sliderRangeId ).slider( "values", 0 );
 		$( txtMinutesId ).text(activity + minutes.toString() + " minutes");
+		$( txtEmotionValueId ).text(emotionValue);
 	});
 }
 
@@ -93,7 +95,6 @@ function configureTrackNewButton(){
 		
 		trackerId++;
 		model.addTracker(trackerId, startMinute, endMinute, activity);
-		configureTracker(trackerId, startMinute, endMinute, activity);
 		updateAverage();
 		
 		$( "#wrpTrackAnother" ).dialog( "close" );
@@ -142,12 +143,29 @@ function getLookupData(){
 	});
 }
 
-function SaveTrackerInfo(startMinute, endMinute, activity, emotionValue){
+function saveTrackerInfo(startMinute, endMinute, activity, emotionValue, trackerId){
+	/*
 	var socket = io.connect(window.location.hostname);
 	
 	socket.emit("saveTrackerInfo", {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue});
 	socket.on("userTrackerUpdate", function(data){
 		//alert(data);
+	});
+	
+	*/
+	
+	$.ajax(
+		{
+			url: "trackers/upsert",
+			type: "POST",
+			dataType: "json",
+			data: {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue, "_id": trackerId}
+		}
+	).done(function(data){
+		configureTracker(data.trackerId, startMinute, endMinute, activity, emotionValue);
+		//TODO: need to figure out why trackers aren't appearing'
+	}).fail(function(jqXHR, textStatus){
+		alert(textStatus);
 	});
 }
 

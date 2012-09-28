@@ -42,6 +42,27 @@ function lookup(request, response, expressServer){
 	lookupHelper.getLookup(lookupType, responseHelper.makeSendResponse(response), expressServer);
 }	
 
+function upsert(request, response, expressServer){
+	//create/update tracker in mongo
+	//console.log(request.body);
+	var db2 = new db.db2(expressServer);
+	db2.userActivity().save(request.body, function(err, doc){
+		if(!err){
+			var result = {"trackerId": doc._id}; 
+			console.log(result);
+			
+			response.write(JSON.stringify(result));
+			response.end();
+		}
+		else{
+			console.log(err);
+			throw err;
+		}
+	});
+}
+
+//TODO: split routeCallbacks into into separate modules
 exports.index = index;
 exports.autoComplete = autoComplete;
 exports.lookup = lookup;
+exports.upsert = upsert;

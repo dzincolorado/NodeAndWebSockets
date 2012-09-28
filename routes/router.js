@@ -14,6 +14,11 @@ module.exports = function(expressServer, passport){
 		routeCallbacks.lookup(request, response, expressServer);
 		});
 	
+	//create/update tracker
+	expressServer.post("/trackers/upsert", function(request, response){
+		routeCallbacks.upsert(request, response, expressServer);
+	})
+	
 	//index
 	expressServer.get("/", routeCallbacks.index);
 	
