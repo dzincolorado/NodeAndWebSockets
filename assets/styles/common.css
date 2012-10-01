@@ -7,6 +7,9 @@
 .ui-selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; clear:both;padding-top:10px}
 .ui-selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; }
 
+.ui-slider-horizontal {height: .4em;}
+.ui-slider-horizontal .ui-slider-handle {position: absolute;z-index: 2;width: 0.9em;height: 0.9em;cursor: default;}
+
 .wrpButton{padding-top: 20px;}
 
 .divider{height:20px;}
