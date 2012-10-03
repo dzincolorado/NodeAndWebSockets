@@ -6,6 +6,7 @@ function db2(expressServer){
 		return trackersDb.collection("activity");
 	};
 	
+	//TODO: currently a capped collection.  need to uncap when ready
 	self.userActivity = function(){
 		return trackersDb.collection("userActivity");
 	};

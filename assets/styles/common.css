@@ -14,3 +14,10 @@
 
 .divider{height:20px;}
 .rightColumn{float:right;}
+
+.ui-state-default, .ui-widget-content .ui-state-happy {border: 1px solid darkgreen;background: green url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+.ui-state-default, .ui-widget-content .ui-state-angry {border: 1px solid darkred;background: red url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}\
+.ui-state-default, .ui-widget-content .ui-state-high_stress {border: 1px solid darkred;background: red url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+.ui-state-default, .ui-widget-content .ui-state-sad {border: 1px solid darkorange;background: orange url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+.ui-state-default, .ui-widget-content .ui-state-no_feeling {border: 1px solid darkbrown;background: brown url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+.ui-state-default, .ui-widget-content .ui-state-love {border: 1px solid darkgreen;background: green url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}

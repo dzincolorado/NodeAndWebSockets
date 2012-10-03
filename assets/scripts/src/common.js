@@ -37,8 +37,8 @@ function EmotionViewModel(){
 
 function resetTrackingInfo()
 {
-	$("#slider-range" ).value(0);
-	$("#slider-range" ).value(5);
+	$("#slider-range" ).val(0);
+	$("#slider-range" ).val(5);
 	$("#txtActivity").val("");
 	$("ddlEmotion").val(emotionModel.emotionValues()[0].value);
 }
@@ -64,8 +64,14 @@ function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 			}
 		});
 		
+		
+		//TODO: http://stackoverflow.com/questions/2394834/change-background-color-of-jquery-slider
 		var minutes = $( sliderRangeId ).slider( "values", 1 ) - $( sliderRangeId ).slider( "values", 0 );
 		$( txtMinutesId ).text(activity + " (" + minutes.toString() + " minutes)");
+		
+		$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
+		var emotionText = $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
+		$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace("%ev", emotionText));
 	});
 }
 
