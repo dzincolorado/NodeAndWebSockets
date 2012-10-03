@@ -37,8 +37,7 @@ function EmotionViewModel(){
 
 function resetTrackingInfo()
 {
-	$("#slider-range" ).val(0);
-	$("#slider-range" ).val(5);
+	$("#slider-range" ).slider({values: [0, 30]});
 	$("#txtActivity").val("");
 	$("ddlEmotion").val(emotionModel.emotionValues()[0].value);
 }
@@ -65,18 +64,16 @@ function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 		});
 		
 		
-		//TODO: http://stackoverflow.com/questions/2394834/change-background-color-of-jquery-slider
 		var minutes = $( sliderRangeId ).slider( "values", 1 ) - $( sliderRangeId ).slider( "values", 0 );
 		$( txtMinutesId ).text(activity + " (" + minutes.toString() + " minutes)");
 		
-		if(id != ""){
-			var emotionText = $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
-			$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
-			$(sliderRangeId + " div").removeClass("ui-widget-header");
-			
-			$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace("%ev", emotionText));
-			$(sliderRangeId + " div").addClass("ui-widget-header-%ev".replace("%ev", emotionText));
-		}
+		var emotionText = id == "" ? "happy" : $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
+		$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
+		$(sliderRangeId + " div").removeClass("ui-widget-header");
+		
+		var regex = new RegExp("%ev", "g");
+		$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace(regex, emotionText));
+		$(sliderRangeId + " div").addClass("ui-widget-header-%ev".replace("%ev", emotionText));
 	});
 }
 
@@ -197,7 +194,7 @@ var model = new TrackerViewModel();
 $(document).ready(function(){
 	
 	configureDataBindings();
-	configureTracker("", 0, 5);
+	configureTracker("", 0, 30);
 	configureTrackAnotherButton();
 	configureTrackNewButton();
 	configureAutoComplete();
