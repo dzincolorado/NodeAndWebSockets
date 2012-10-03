@@ -69,9 +69,14 @@ function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 		var minutes = $( sliderRangeId ).slider( "values", 1 ) - $( sliderRangeId ).slider( "values", 0 );
 		$( txtMinutesId ).text(activity + " (" + minutes.toString() + " minutes)");
 		
-		$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
-		var emotionText = $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
-		$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace("%ev", emotionText));
+		if(id != ""){
+			var emotionText = $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
+			$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
+			$(sliderRangeId + " div").removeClass("ui-widget-header");
+			
+			$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace("%ev", emotionText));
+			$(sliderRangeId + " div").addClass("ui-widget-header-%ev".replace("%ev", emotionText));
+		}
 	});
 }
 

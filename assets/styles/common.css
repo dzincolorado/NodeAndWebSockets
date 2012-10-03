@@ -19,5 +19,12 @@
 .ui-state-default, .ui-widget-content .ui-state-angry {border: 1px solid darkred;background: red url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}\
 .ui-state-default, .ui-widget-content .ui-state-high_stress {border: 1px solid darkred;background: red url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
 .ui-state-default, .ui-widget-content .ui-state-sad {border: 1px solid darkorange;background: orange url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
-.ui-state-default, .ui-widget-content .ui-state-no_feeling {border: 1px solid darkbrown;background: brown url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+.ui-state-default, .ui-widget-content .ui-state-no_feeling {border: 1px solid #5C4033;background: brown url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
 .ui-state-default, .ui-widget-content .ui-state-love {border: 1px solid darkgreen;background: green url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+
+.ui-widget-header-happy{background: green url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+.ui-widget-header-angry{background: red url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+.ui-widget-header-high_stress{background: red url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+.ui-widget-header-sad{background: orange url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+.ui-widget-header-no_feeling{background: brown url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+.ui-widget-header-love{background: green url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
