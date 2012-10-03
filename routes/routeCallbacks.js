@@ -1,5 +1,6 @@
 var db = require("../db/db");
 var lookupHelper = require("../helpers/lookup");
+var aggregationHelper = require("../helpers/aggregation");
 var responseHelper = require("../helpers/response");
 
 function index(request, response){
@@ -42,6 +43,11 @@ function lookup(request, response, expressServer){
 	lookupHelper.getLookup(lookupType, responseHelper.makeSendResponse(response), expressServer);
 }	
 
+function aggregate(request, response, expressServer){
+	var aggregationType = request.params.type;
+	aggregationHelper.getResult(aggregationType, responseHelper.makeSendResponse(response), expressServer);
+}
+
 function upsert(request, response, expressServer){
 	//create/update tracker in mongo
 	//console.log(request.body);
@@ -66,3 +72,4 @@ exports.index = index;
 exports.autoComplete = autoComplete;
 exports.lookup = lookup;
 exports.upsert = upsert;
+exports.aggregate = aggregate;

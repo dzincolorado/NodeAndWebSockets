@@ -167,7 +167,7 @@ function saveTrackerInfo(startMinute, endMinute, activity, emotionValue, tracker
 			url: "trackers/upsert",
 			type: "POST",
 			dataType: "json",
-			data: {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue, "_id": trackerId}
+			data: {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': parseInt(emotionValue), "_id": trackerId}
 		}
 	).done(function(data){
 		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotionValue);
@@ -187,6 +187,10 @@ function updateAverage(){
 	}
 	
 	$( "#wrpRunningAvg" ).show(effect, null, 1000, null );
+	$.getJSON("aggregate/average", function(data, status, xhr){
+		//alert(data.result);
+		$("#wrpAverage").html(data.result);
+	})
 }
 
 var model = new TrackerViewModel();

@@ -19,6 +19,12 @@ module.exports = function(expressServer, passport){
 		routeCallbacks.upsert(request, response, expressServer);
 	})
 	
+	//get some calculated values
+	expressServer.get("/aggregate/:type", function(request, response){
+		console.log("aggregation time");
+		routeCallbacks.aggregate(request, response, expressServer);
+	});
+	
 	//index
 	expressServer.get("/", routeCallbacks.index);
 	

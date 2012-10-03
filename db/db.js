@@ -7,6 +7,7 @@ function db2(expressServer){
 	};
 	
 	//TODO: currently a capped collection.  need to uncap when ready
+	//TODO:  need to add modifiedDate, and addDate to userActivity collection
 	self.userActivity = function(){
 		return trackersDb.collection("userActivity");
 	};

@@ -6,7 +6,7 @@ function getLookup(lookupType, sendResponse, expressServer){
 	console.log(lookupType);
 	
 	if(lookupType.trim().length == 0){
-		sendResponse(JSON.stringify(lookupList));
+		sendResponse(null, JSON.stringify(lookupList));
 	}
 	else if(lookupType.toLowerCase().trim() == "emotion"){
 		var db2 = new db.db2(expressServer);
