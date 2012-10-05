@@ -26,6 +26,7 @@ function getResult(aggregationType, sendResponse, expressServer){
  */
 
 
+//TODO:  need to account for activity duration
 map = function (){
   emit( "average" , { totalEmotion: parseFloat(this.emotionValue), num : 1.0, avg: 0.0 } );
 };
