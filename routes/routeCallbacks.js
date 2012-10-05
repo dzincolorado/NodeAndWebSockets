@@ -50,7 +50,17 @@ function aggregate(request, response, expressServer){
 
 function upsert(request, response, expressServer){
 	//create/update tracker in mongo
-	//console.log(request.body);
+	
+	//converting emotionValue to a number as this is being stored as string and mapReduce functions are returning NaN.
+	var newTrackerValue = request.body;
+	//console.log(typeof newTrackerValue.emotionValue);
+	newTrackerValue.emotionValue = parseInt(newTrackerValue.emotionValue);
+	
+	//following fields were not part of initial migration so they will be created in the collection first time around.
+	newTrackerValue.addDate = new Date();
+	newTrackerValue.modifiedDate = newTrackerValue.addDate;
+	//console.log(typeof newTrackerValue.emotionValue);
+	
 	var db2 = new db.db2(expressServer);
 	db2.userActivity().save(request.body, function(err, doc){
 		if(!err){

@@ -9,7 +9,7 @@ function getResult(aggregationType, sendResponse, expressServer){
 	}
 	else{
 		var db2 = new db.db2(expressServer);
-			db2.userActivity().mapReduce(map, reduce, { out : "emotionAverage"}, function(err, results, stats){
+			db2.userActivity().mapReduce(map, reduce, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
 				results.findOne({}, function(err, result){
 					console.log("first one" + util.inspect(result.value));
 					
@@ -27,11 +27,11 @@ function getResult(aggregationType, sendResponse, expressServer){
 
 
 map = function (){
-  emit( this.name , { totalEmotion : this.emotionValue , num : 1, avg: 0 } );
+  emit( "average" , { totalEmotion: parseFloat(this.emotionValue), num : 1.0, avg: 0.0 } );
 };
 
 reduce = function (name, values){
-  var n = {totalEmotion : 0, num : 0, avg:0};
+  var n = {totalEmotion : 0.0, num : 0.0, avg:0.0};
   
   values.forEach(function(value){
   	n.totalEmotion += value.totalEmotion;
