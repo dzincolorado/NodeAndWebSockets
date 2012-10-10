@@ -6,6 +6,15 @@ function Tracker(id, startMinute, endMinute, activity, emotionValue){
 	self.endMinute = ko.observable(endMinute);
 	self.activity = ko.observable(activity);
 	self.emotionValue = ko.observable(emotionValue);
+	
+	self.label = ko.computed(function(){
+		return buildTrackerLabel(self.startMinute(), self.endMinute(), self.activity());
+	});
+}
+
+function buildTrackerLabel(startMinute, endMinute, activity){
+	var duration = endMinute - startMinute; 	
+	return (typeof activity == "undefined" || activity.trim() == "" ? "Twiddling my thumbs" : activity) + " {" + duration.toString() + " minutes}"
 }
 
 function TrackerViewModel(){
@@ -43,10 +52,6 @@ function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 	$(function() {
 		var sliderRangeId ="#slider-range" + id; 
 		var txtMinutesId ="#txtMinutes" + id;
-		
-		if(typeof activity == "undefined" || activity.trim() == ""){
-			activity = "Twiddling my thumbs"; 	
-		}
 		 
 		$( sliderRangeId ).slider({
 			range: true,
@@ -55,14 +60,17 @@ function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 			step: 5,
 			values: [ startMinute, endMinute ],
 			slide: function( event, ui ) {
-				var minutes = ui.values[ 1 ] - ui.values[ 0 ];
-				$( txtMinutesId ).text(activity + " (" + minutes + " minutes)" );
+				$( txtMinutesId ).text(buildTrackerLabel(ui.values[ 0 ], ui.values[ 1 ], activity));
 			}
 		});
 		
-		
-		var minutes = $( sliderRangeId ).slider( "values", 1 ) - $( sliderRangeId ).slider( "values", 0 );
-		$( txtMinutesId ).text(activity + " (" + minutes.toString() + " minutes)");
+		if(id == ""){
+			$( txtMinutesId ).text(
+				buildTrackerLabel(
+					$( sliderRangeId ).slider( "values", 0 ), 
+					$( sliderRangeId ).slider( "values", 1 ), 
+					activity));
+		}
 		
 		var emotionText = id == "" ? "happy" : $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
 		$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
