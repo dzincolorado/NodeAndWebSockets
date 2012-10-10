@@ -13,6 +13,12 @@ module.exports = function(expressServer, passport){
 	expressServer.get("/lookup/:type", function(request, response){
 		routeCallbacks.lookup(request, response, expressServer);
 		});
+		
+	//get a list of the trackers
+	//TODO: consider using *index* route
+	expressServer.get("/trackers", function(request, response){
+		routeCallbacks.getTrackers(request, response, expressServer);
+	})
 	
 	//create/update tracker
 	expressServer.post("/trackers/upsert", function(request, response){

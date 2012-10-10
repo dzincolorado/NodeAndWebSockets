@@ -2,6 +2,7 @@ var db = require("../db/db");
 var lookupHelper = require("../helpers/lookup");
 var aggregationHelper = require("../helpers/aggregation");
 var responseHelper = require("../helpers/response");
+var trackersHelper = require("../helpers/trackers");
 
 function index(request, response){
 	response.render("trackers", {locals: {}});
@@ -48,6 +49,10 @@ function aggregate(request, response, expressServer){
 	aggregationHelper.getResult(aggregationType, responseHelper.makeSendResponse(response), expressServer);
 }
 
+function getTrackers(request, response, expressServer){
+	trackersHelper.list(responseHelper.makeSendResponse(response), expressServer);
+}
+
 function upsert(request, response, expressServer){
 	//create/update tracker in mongo
 	
@@ -83,3 +88,4 @@ exports.autoComplete = autoComplete;
 exports.lookup = lookup;
 exports.upsert = upsert;
 exports.aggregate = aggregate;
+exports.getTrackers = getTrackers;

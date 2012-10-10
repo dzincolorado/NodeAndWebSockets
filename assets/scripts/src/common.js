@@ -16,9 +16,6 @@ function TrackerViewModel(){
 	self.addTracker = function(id, startMinute, endMinute, activity, emotionValue){
 		
 		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotionValue));
-	
-		//TODO: need to hook up emotionvalue
-		//TODO:  need to reset activity and slider values
 	}
 }
 
@@ -140,6 +137,10 @@ function configureAutoComplete(){
 	});
 }
 
+function configureUI(){
+	$("#wrpRunningAvg").hide();
+}
+
 var emotionModel = new EmotionViewModel();
 function getLookupData(){
 	$.getJSON("lookup/emotion", function(data, status, xhr){
@@ -148,6 +149,16 @@ function getLookupData(){
 		});
 		
 		emotionModel.emotionValues(mappedData);
+	});
+}
+
+function getTrackers(){
+	$.getJSON("trackers", function(data, status, xhr){
+		var mappedData = ko.utils.arrayMap(data, function(item){
+			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotionValue"])
+		});
+		
+		model.trackers(mappedData);
 	});
 }
 
@@ -197,11 +208,12 @@ var model = new TrackerViewModel();
 //setup event handlers
 $(document).ready(function(){
 	
+	configureUI();
 	configureDataBindings();
 	configureTracker("", 0, 30);
 	configureTrackAnotherButton();
 	configureTrackNewButton();
 	configureAutoComplete();
 	getLookupData();
-	$("#wrpRunningAvg").hide();
+	getTrackers();
 })
