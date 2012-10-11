@@ -10,16 +10,20 @@ function getResult(aggregationType, sendResponse, expressServer){
 	else{
 		var db2 = new db.db2(expressServer);
 			db2.userActivity().mapReduce(map, reduce, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
-				results.findOne({}, function(err, result){
-					
-					var avg = 0;
-					if(result != null){
-						console.log("first one" + util.inspect(result.value));
-					
-						avg = result.value.avg;
-					}
-					sendResponse(null, JSON.stringify({result: avg}));
-				});
+				
+				//TODO: something wrong here.
+				if(results != null){
+					results.findOne({}, function(err, result){
+						
+						var avg = 0;
+						if(result != null){
+							console.log("first one" + util.inspect(result.value));
+						
+							avg = result.value.avg;
+						}
+						sendResponse(null, JSON.stringify({result: avg}));
+					});
+				}
 			});
 	}
 }
