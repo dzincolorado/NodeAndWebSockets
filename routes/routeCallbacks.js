@@ -76,18 +76,19 @@ function upsert(request, response, expressServer){
 	newTrackerValue.modifiedDate = newTrackerValue.addDate;
 	//console.log(typeof newTrackerValue.emotionValue);
 	
-	persistNewActivity(newTrackerValue.activity, expressServer);
-	
 	var db2 = new db.db2(expressServer);
 	db2.userActivity().find({}, function(err, docs){
 		console.log("doc count: " + docs.length);
 		
 		//TODO: remove once we no longer need a cap on the collection.  Not using capped collections at this time.
-		if(docs.length > 20)
+		if(docs.length > 30)
 		{
 			//?
 		}
 		else {
+			
+			persistNewActivity(newTrackerValue.activity, expressServer);
+			
 			db2.userActivity().save(request.body, function(err, doc){
 				if(!err){
 					var result = {"trackerId": doc._id}; 
