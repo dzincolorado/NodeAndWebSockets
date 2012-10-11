@@ -50,14 +50,17 @@ function getTrackers(request, response, expressServer){
 }
 
 function persistNewActivity(newActivity, expressServer){
-	var db2 = new db.db2(expressServer);
-	db2.activity().findOne({'name': newActivity}, function(err, doc){;
-		console.log("looking for: %s".replace("%s", newActivity) );
-		if(doc == null){
-			console.log("Saving new activity!")
-			db2.activity().save({'name': newActivity, 'addDate': new Date()});
-		}
-	})
+	
+	if(typeof newActivity != "undefined" && newActivity.trim() != ""){
+		var db2 = new db.db2(expressServer);
+		db2.activity().findOne({'name': newActivity}, function(err, doc){;
+			console.log("looking for: %s".replace("%s", newActivity) );
+			if(doc == null){
+				console.log("Saving new activity!")
+				db2.activity().save({'name': newActivity.trim(), 'addDate': new Date()});
+			}
+		});
+	}
 }
 
 function upsert(request, response, expressServer){
@@ -76,19 +79,30 @@ function upsert(request, response, expressServer){
 	persistNewActivity(newTrackerValue.activity, expressServer);
 	
 	var db2 = new db.db2(expressServer);
-	db2.userActivity().save(request.body, function(err, doc){
-		if(!err){
-			var result = {"trackerId": doc._id}; 
-			console.log(result);
-			
-			response.write(JSON.stringify(result));
-			response.end();
+	db2.userActivity().find({}, function(err, docs){
+		console.log("doc count: " + docs.length);
+		
+		//TODO: remove once we no longer need a cap on the collection.  Not using capped collections at this time.
+		if(docs.length > 20)
+		{
+			//?
 		}
-		else{
-			console.log(err);
-			throw err;
+		else {
+			db2.userActivity().save(request.body, function(err, doc){
+				if(!err){
+					var result = {"trackerId": doc._id}; 
+					console.log(result);
+					
+					response.write(JSON.stringify(result));
+					response.end();
+				}
+				else{
+					console.log(err);
+					throw err;
+				}
+			});
 		}
-	});
+	})
 }
 
 //TODO: split routeCallbacks into into separate modules

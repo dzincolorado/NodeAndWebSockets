@@ -11,10 +11,14 @@ function getResult(aggregationType, sendResponse, expressServer){
 		var db2 = new db.db2(expressServer);
 			db2.userActivity().mapReduce(map, reduce, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
 				results.findOne({}, function(err, result){
-					console.log("first one" + util.inspect(result.value));
 					
-					//TODO: need to figure out why mapreduce function is returning NaN
-					sendResponse(null, JSON.stringify({result: result.value.avg}));
+					var avg = 0;
+					if(result != null){
+						console.log("first one" + util.inspect(result.value));
+					
+						avg = result.value.avg;
+					}
+					sendResponse(null, JSON.stringify({result: avg}));
 				});
 			});
 	}
@@ -40,7 +44,9 @@ reduce = function (name, values){
     n.num += value.num;
   });
   
-  n.avg = n.totalEmotion / n.duration;
+  if(n.num > 0){
+  		n.avg = n.totalEmotion / n.duration;
+  }
   
   return n;
 };
