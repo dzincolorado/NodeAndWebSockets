@@ -18,10 +18,6 @@ function autoComplete(request, response, expressServer){
 	if(term.length > 2){
 		var db2 = new db.db2(expressServer);
 		db2.activity().find({"name": {"$regex" : "(" + term + ")"}}, function(err, docs){
-			if(docs.length == 0){
-				//activity.save(request.query.term))	
-			}
-			
 			console.log(docs.length);
 			
 			var suggestedValues = [];
@@ -53,6 +49,17 @@ function getTrackers(request, response, expressServer){
 	trackersHelper.list(responseHelper.makeSendResponse(response), expressServer);
 }
 
+function persistNewActivity(newActivity, expressServer){
+	var db2 = new db.db2(expressServer);
+	db2.activity().findOne({'name': newActivity}, function(err, doc){;
+		console.log("looking for: %s".replace("%s", newActivity) );
+		if(doc == null){
+			console.log("Saving new activity!")
+			db2.activity().save({'name': newActivity, 'addDate': new Date()});
+		}
+	})
+}
+
 function upsert(request, response, expressServer){
 	//create/update tracker in mongo
 	
@@ -65,6 +72,8 @@ function upsert(request, response, expressServer){
 	newTrackerValue.addDate = new Date();
 	newTrackerValue.modifiedDate = newTrackerValue.addDate;
 	//console.log(typeof newTrackerValue.emotionValue);
+	
+	persistNewActivity(newTrackerValue.activity, expressServer);
 	
 	var db2 = new db.db2(expressServer);
 	db2.userActivity().save(request.body, function(err, doc){

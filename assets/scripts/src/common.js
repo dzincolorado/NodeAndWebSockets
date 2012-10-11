@@ -1,10 +1,11 @@
-function Tracker(id, startMinute, endMinute, activity, emotionValue){
+function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 	var self = this;
 	
 	self.trackerId = id;
 	self.startMinute = ko.observable(startMinute);
 	self.endMinute = ko.observable(endMinute);
 	self.activity = ko.observable(activity);
+	self.emotion = ko.observable(emotion);
 	self.emotionValue = ko.observable(emotionValue);
 	
 	self.label = ko.computed(function(){
@@ -22,9 +23,9 @@ function TrackerViewModel(){
 	
 	self.trackers = ko.observableArray([]);
 	
-	self.addTracker = function(id, startMinute, endMinute, activity, emotionValue){
+	self.addTracker = function(id, startMinute, endMinute, activity, emotion, emotionValue){
 		
-		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotionValue));
+		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotion, emotionValue));
 	}
 }
 
@@ -48,7 +49,7 @@ function resetTrackingInfo()
 	$("ddlEmotion").val(emotionModel.emotionValues()[0].value);
 }
 
-function configureTracker(id, startMinute, endMinute, activity, emotionValue){
+function configureTracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 	$(function() {
 		var sliderRangeId ="#slider-range" + id; 
 		var txtMinutesId ="#txtMinutes" + id;
@@ -72,7 +73,7 @@ function configureTracker(id, startMinute, endMinute, activity, emotionValue){
 					activity));
 		}
 		
-		var emotionText = id == "" ? "happy" : $("#ddlEmotion option:selected").text().replace(" ", "_").toLowerCase();
+		var emotionText = id == "" || typeof emotion == "undefined" ? "happy" : emotion.replace(" ", "_").toLowerCase();
 		$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
 		$(sliderRangeId + " div").removeClass("ui-widget-header");
 		
@@ -107,8 +108,9 @@ function configureTrackNewButton(){
 		var endMinute = $("#slider-range" ).slider("values", 1 );
 		var activity = $("#txtActivity").val();
 		var emotionValue = $("#ddlEmotion").val();
+		var emotion = $("#ddlEmotion option:selected").text();
 	
-		saveTrackerInfo(startMinute, endMinute, activity, emotionValue);
+		saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue);
 		
 		$( "#wrpTrackAnother" ).dialog( "close" );
 		return false;
@@ -163,14 +165,25 @@ function getLookupData(){
 function getTrackers(){
 	$.getJSON("trackers", function(data, status, xhr){
 		var mappedData = ko.utils.arrayMap(data, function(item){
-			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotionValue"])
+			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"]);
 		});
 		
 		model.trackers(mappedData);
+	}).success(function(){
+		updateAverage();
+		model.trackers().forEach(function(tracker){
+			configureTracker(
+				tracker.trackerId, 
+				tracker.startMinute(), 
+				tracker.endMinute(), 
+				tracker.activity(), 
+				tracker.emotion(), 
+				tracker.emotionValue());
+		});
 	});
 }
 
-function saveTrackerInfo(startMinute, endMinute, activity, emotionValue, trackerId){
+function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue, trackerId){
 	/*
 	var socket = io.connect(window.location.hostname);
 	
@@ -186,11 +199,18 @@ function saveTrackerInfo(startMinute, endMinute, activity, emotionValue, tracker
 			url: "trackers/upsert",
 			type: "POST",
 			dataType: "json",
-			data: {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': parseInt(emotionValue), "_id": trackerId}
+			data: {
+				'startMinute': startMinute, 
+				'endMinute':endMinute, 
+				'activity': activity, 
+				'emotion' : emotion, 
+				'emotionValue': parseInt(emotionValue), 
+				"_id": trackerId
+			}
 		}
 	).done(function(data){
-		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotionValue);
-		configureTracker(data.trackerId, startMinute, endMinute, activity, emotionValue);
+		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue);
+		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue);
 		updateAverage();
 		resetTrackingInfo();
 	}).fail(function(jqXHR, textStatus){

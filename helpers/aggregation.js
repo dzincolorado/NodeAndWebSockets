@@ -28,18 +28,19 @@ function getResult(aggregationType, sendResponse, expressServer){
 
 //TODO:  need to account for activity duration
 map = function (){
-  emit( "average" , { totalEmotion: parseFloat(this.emotionValue), num : 1.0, avg: 0.0 } );
+  emit( "average" , { totalEmotion: parseFloat(this.emotionValue), duration: this.endMinute - this.startMinute, num : 1.0, avg: 0.0 } );
 };
 
 reduce = function (name, values){
-  var n = {totalEmotion : 0.0, num : 0.0, avg:0.0};
+  var n = {totalEmotion : 0.0, duration: 0.0, num : 0.0, avg:0.0};
   
   values.forEach(function(value){
-  	n.totalEmotion += value.totalEmotion;
+  	n.totalEmotion += value.totalEmotion * value.duration;
+  	n.duration += value.duration;
     n.num += value.num;
   });
   
-  n.avg = n.totalEmotion / n.num;
+  n.avg = n.totalEmotion / n.duration;
   
   return n;
 };
