@@ -56,8 +56,8 @@ function persistNewActivity(newActivity, expressServer){
 		db2.activity().findOne({'name': newActivity}, function(err, doc){;
 			console.log("looking for: %s".replace("%s", newActivity) );
 			if(doc == null){
-				console.log("Saving new activity!")
-				db2.activity().save({'name': newActivity.trim(), 'addDate': new Date()});
+				console.log("Saving new activity: " + newActivity.trim());
+				db2.activity().save({'name': newActivity.trim().substr(29), 'addDate': new Date()});
 			}
 		});
 	}

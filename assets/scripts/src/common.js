@@ -1,6 +1,6 @@
 var defaultActivity = "Twiddling my thumbs";
 
-function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue){
+function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, addDate){
 	var self = this;
 	
 	self.trackerId = id;
@@ -9,6 +9,11 @@ function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 	self.activity = ko.observable(activity);
 	self.emotion = ko.observable(emotion);
 	self.emotionValue = ko.observable(emotionValue);
+	self.addDate = ko.observable(addDate)
+	
+	self.formattedDate = ko.computed(function(){
+		return new Date(self.addDate()).toDateString();
+	});
 	
 	self.label = ko.computed(function(){
 		return buildTrackerLabel(self.startMinute(), self.endMinute(), self.activity());
@@ -16,8 +21,11 @@ function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 }
 
 function buildTrackerLabel(startMinute, endMinute, activity){
-	var duration = endMinute - startMinute; 	
-	return (typeof activity == "undefined" || activity.trim() == "" ? defaultActivity : activity) + " {" + duration.toString() + " minutes}"
+	var duration = endMinute - startMinute; 
+	var tokenized = "%a {%d mins}";
+	var trackerLabel = tokenized.replace("%a", (typeof activity == "undefined" || activity.trim() == "" ? defaultActivity : activity));
+	trackerLabel = trackerLabel.replace("%d", duration.toString());
+	return trackerLabel;
 }
 
 function TrackerViewModel(){
@@ -25,9 +33,9 @@ function TrackerViewModel(){
 	
 	self.trackers = ko.observableArray([]);
 	
-	self.addTracker = function(id, startMinute, endMinute, activity, emotion, emotionValue){
+	self.addTracker = function(id, startMinute, endMinute, activity, emotion, emotionValue, addDate){
 		
-		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotion, emotionValue));
+		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, addDate));
 	}
 }
 
@@ -49,12 +57,14 @@ function resetTrackingInfo()
 	$("#slider-range" ).slider({values: [0, 30]});
 	$("#txtActivity").val("");
 	$("ddlEmotion").val(emotionModel.emotionValues()[0].value);
+	applyDynamicStyles("", emotionModel.emotionValues()[0].value)
 }
 
 function applyDynamicStyles(id, emotion){
 	
 	var sliderRangeId = getSliderRangeId(id);
 	var txtMinutesId = getTrackerCaptionId(id);
+	var txtTrackerCaptionAddDateId = getTrackerCaptionAddDateId(id);
 	
 	var emotionText = typeof emotion == "undefined" ? "happy" : emotion.replace(" ", "_").toLowerCase();
 	$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
@@ -69,14 +79,22 @@ function applyDynamicStyles(id, emotion){
 	$(sliderRangeId + " div").addClass("ui-widget-header-%ev".replace("%ev", emotionText));
 	
 	$(txtMinutesId).addClass("trackerCaption-%ev".replace("%ev", emotionText));
+	if(id != ""){
+		$(txtTrackerCaptionAddDateId).addClass("trackerCaption-%ev".replace("%ev", emotionText));
+	}
 }
 
+//TODO: need to encapsulate id properties into js class
 function getSliderRangeId(id){
 	return "#slider-range" + id; 
 }
 
 function getTrackerCaptionId(id){
 	return "#txtMinutes" + id;
+}
+
+function getTrackerCaptionAddDateId(id){
+	return "#wrpAddDate" + id;
 }
 
 function configureTracker(id, startMinute, endMinute, activity, emotion, emotionValue){
@@ -194,7 +212,7 @@ function getLookupData(){
 function getTrackers(){
 	$.getJSON("trackers", function(data, status, xhr){
 		var mappedData = ko.utils.arrayMap(data, function(item){
-			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"]);
+			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"], item["addDate"]);
 		});
 		
 		model.trackers(mappedData);
@@ -207,7 +225,8 @@ function getTrackers(){
 				tracker.endMinute(), 
 				tracker.activity(), 
 				tracker.emotion(), 
-				tracker.emotionValue());
+				tracker.emotionValue(),
+				tracker.addDate());
 		});
 	});
 }
@@ -238,8 +257,8 @@ function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue
 			}
 		}
 	).done(function(data){
-		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue);
-		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue);
+		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
+		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
 		updateAverage();
 		resetTrackingInfo();
 	}).fail(function(jqXHR, textStatus){
