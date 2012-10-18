@@ -1,3 +1,5 @@
+var defaultActivity = "Twiddling my thumbs";
+
 function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 	var self = this;
 	
@@ -15,7 +17,7 @@ function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 
 function buildTrackerLabel(startMinute, endMinute, activity){
 	var duration = endMinute - startMinute; 	
-	return (typeof activity == "undefined" || activity.trim() == "" ? "Twiddling my thumbs" : activity) + " {" + duration.toString() + " minutes}"
+	return (typeof activity == "undefined" || activity.trim() == "" ? defaultActivity : activity) + " {" + duration.toString() + " minutes}"
 }
 
 function TrackerViewModel(){
@@ -49,10 +51,38 @@ function resetTrackingInfo()
 	$("ddlEmotion").val(emotionModel.emotionValues()[0].value);
 }
 
+function applyDynamicStyles(id, emotion){
+	
+	var sliderRangeId = getSliderRangeId(id);
+	var txtMinutesId = getTrackerCaptionId(id);
+	
+	var emotionText = typeof emotion == "undefined" ? "happy" : emotion.replace(" ", "_").toLowerCase();
+	$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
+	$(sliderRangeId + " div").removeClass("ui-widget-header");
+	
+	$(txtMinutesId).removeClass (function (index, css) {
+	    return (css.match (/\btrackerCaption-\S+/g) || []).join(' ');
+	});
+	
+	var regex = new RegExp("%ev", "g");
+	$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace(regex, emotionText));
+	$(sliderRangeId + " div").addClass("ui-widget-header-%ev".replace("%ev", emotionText));
+	
+	$(txtMinutesId).addClass("trackerCaption-%ev".replace("%ev", emotionText));
+}
+
+function getSliderRangeId(id){
+	return "#slider-range" + id; 
+}
+
+function getTrackerCaptionId(id){
+	return "#txtMinutes" + id;
+}
+
 function configureTracker(id, startMinute, endMinute, activity, emotion, emotionValue){
 	$(function() {
-		var sliderRangeId ="#slider-range" + id; 
-		var txtMinutesId ="#txtMinutes" + id;
+		var sliderRangeId =getSliderRangeId(id);
+		var txtMinutesId =getTrackerCaptionId(id);
 		 
 		$( sliderRangeId ).slider({
 			range: true,
@@ -73,13 +103,7 @@ function configureTracker(id, startMinute, endMinute, activity, emotion, emotion
 					activity));
 		}
 		
-		var emotionText = id == "" || typeof emotion == "undefined" ? "happy" : emotion.replace(" ", "_").toLowerCase();
-		$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
-		$(sliderRangeId + " div").removeClass("ui-widget-header");
-		
-		var regex = new RegExp("%ev", "g");
-		$(sliderRangeId + " a").addClass("ui-slider-handle ui-state-%ev ui-corner-all .ui-state-%ev".replace(regex, emotionText));
-		$(sliderRangeId + " div").addClass("ui-widget-header-%ev".replace("%ev", emotionText));
+		applyDynamicStyles(id, emotion);
 	});
 }
 
@@ -149,6 +173,11 @@ function configureAutoComplete(){
 
 function configureUI(){
 	$("#wrpRunningAvg").hide();
+	$("#txtActivity").attr("placeholder", defaultActivity);
+	$("#ddlEmotion").on("change", function(event){
+		var emotion = $("option:selected", $(this)).text();
+		applyDynamicStyles("", emotion);
+	});
 }
 
 var emotionModel = new EmotionViewModel();

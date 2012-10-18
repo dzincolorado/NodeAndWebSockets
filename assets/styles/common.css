@@ -1,14 +1,11 @@
-.sliderValue{
-	border:0; color:#f6931f; font-weight:normal;height:40px;padding-top: 10px;	
-}
-
 .ui-selectable .ui-selecting { background: #FECA40; }
 .ui-selectable .ui-selected { background: #F39814; color: white; }
 .ui-selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; clear:both;padding-top:10px}
 .ui-selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; }
 
-.ui-slider-horizontal {height: .4em;}
-.ui-slider-horizontal .ui-slider-handle {position: absolute;z-index: 2;width: 0.9em;height: 0.9em;cursor: default;}
+/*slider styling */
+.ui-slider-horizontal {height: 1.5em;}
+.ui-slider-horizontal .ui-slider-handle {position: absolute;z-index: 2;width: 0.4em;height: 1.9em;cursor: default;margin-left: -.4em;}
 
 .wrpButton{padding-top: 20px;}
 
@@ -21,6 +18,7 @@
 .ui-state-default, .ui-widget-content .ui-state-sad {border: 1px solid #FF8C00;background: orange url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
 .ui-state-default, .ui-widget-content .ui-state-no_feeling {border: 1px solid #5C4033;background: brown url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
 .ui-state-default, .ui-widget-content .ui-state-love {border: 1px solid #006400;background: green url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
+.ui-state-default, .ui-widget-content .ui-state-excited {border: 1px solid #006400;background: blue url(images/ui-bg_highlight-hard_15_459e00_1x100.png) 50% 50% repeat-x;font-weight: bold;color: white;}
 
 .ui-widget-header-happy{background: green url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
 .ui-widget-header-angry{background: red url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
@@ -28,3 +26,12 @@
 .ui-widget-header-sad{background: orange url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
 .ui-widget-header-no_feeling{background: brown url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
 .ui-widget-header-love{background: green url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+.ui-widget-header-excited{background: blue url(../images/?new=f6a828&w=500&h=100&f=png&q=100&fltr[]=over|textures/12_gloss_wave.png|0|0|35) 50% 50% repeat-x;color: white;font-weight: bold;}
+
+.trackerCaption-happy{	border:0; color:green; font-weight:normal;height:40px;padding-top: 10px;	}
+.trackerCaption-angry{	border:0; color:red; font-weight:normal;height:40px;padding-top: 10px;	}
+.trackerCaption-high_stress{	border:0; color:red; font-weight:normal;height:40px;padding-top: 10px;	}
+.trackerCaption-sad{	border:0; color:orange; font-weight:normal;height:40px;padding-top: 10px;	}
+.trackerCaption-no_feeling{	border:0; color: brown; font-weight:normal;height:40px;padding-top: 10px;	}
+.trackerCaption-love{	border:0; color:green; font-weight:normal;height:40px;padding-top: 10px;	}
+.trackerCaption-excited{	border:0; color:blue; font-weight:normal;height:40px;padding-top: 10px;	}

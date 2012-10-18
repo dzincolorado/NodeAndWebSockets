@@ -12,6 +12,7 @@ function getResult(aggregationType, sendResponse, expressServer){
 			db2.userActivity().mapReduce(map, reduce, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
 				
 				//TODO: something wrong here.
+				console.log("mapreduce results: %r ".replace("%r", results));
 				if(results != null){
 					results.findOne({}, function(err, result){
 						
