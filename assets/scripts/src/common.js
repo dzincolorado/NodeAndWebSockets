@@ -193,7 +193,7 @@ function configureEmotionChart() {
     d4        = [[1, 2, 9]],
     d5        = [[1, 1, 8]],
     data      = [],
-    timeline  = { show : true, barWidth : .6, fillColor: 'blue', color: 'blue' },
+    timeline  = { show : true, barWidth : .6},
     markers   = [],
     labels    = ['Angry', 'Sad', 'Love', 'Happy', 'Excited'],
     i, graph, point;
@@ -236,7 +236,8 @@ function configureEmotionChart() {
     title: "Time By Emotion",
     fontColor: '#37AA37',
   	backgroundColor: '#FFFFFF',
-  	fill: false
+  	fill: false,
+  	colors: ['red', 'green', 'blue', 'brown', 'orange']
   });
 }
 
