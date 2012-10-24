@@ -5,22 +5,23 @@ function getLookup(lookupType, sendResponse, expressServer){
 	
 	console.log(lookupType);
 	
-	if(lookupType.trim().length == 0){
-		sendResponse(null, JSON.stringify(lookupList));
-	}
-	else if(lookupType.toLowerCase().trim() == "emotion"){
-		
-		//TODO: cache this list.
-		var db2 = new db.db2(expressServer);
-		db2.emotion().find({}, function(err, docs){
-			/*
-			docs.forEach(function(doc){
-				lookupList.push(doc);
-			});*/
-			
-			console.log("writing list to response stream");
-			sendResponse(null, JSON.stringify(docs));
-		});
+	var db2 = new db.db2(expressServer);
+	//TODO: cache this list.
+	switch(lookupType.toLowerCase().trim())
+	{
+		case "emotion":
+			db2.emotion().find({}, function(err, docs){			
+				sendResponse(null, JSON.stringify(docs));
+			});
+			break;
+		case "category":
+			db2.category().find({}, function(err, docs){			
+				sendResponse(null, JSON.stringify(docs));
+			});
+			break;
+		default:
+			sendResponse(null, JSON.stringify(lookupList));
+			break;
 	}
 }
 

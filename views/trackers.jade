@@ -3,12 +3,11 @@ extends layout
 block append head
 		
 block content
-	h3 Current 24 hours
 
 	div(class="alert alert-info", id="wrpRunningAvg") Average:
 		div(class="rightColumn", id="wrpAverage")
 
-	div(style="width:200px;float:right;position:absolute;left:400px;top:65px")
+	div(style="width:200px;float:right;position:absolute;left:400px;top:32px")
 		div(class="render", id="trackerChart", style="height:200px")
 		
 	ol(data-bind="foreach: trackers", class="ui-selectable", id="olTrackers")
@@ -27,7 +26,7 @@ block content
 		div(class="sectionSplitter")
 		
 		label(for="ddlCategory") Category:
-			select(id="ddlCategory", data-bind="options: categoryValues, optionsText: 'name', optionsValue: 'value'", class="rightColumn")
+			select(id="ddlCategory", data-bind="options: categories, optionsText: 'name', optionsValue: 'name'", class="rightColumn")
 		label(for="txtActivity") Activity:
 			input(type="text", id="txtActivity", class="rightColumn", maxLength="30")
 		div(class="divider")

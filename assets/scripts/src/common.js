@@ -1,55 +1,9 @@
-var defaultActivity = "Twiddling my thumbs";
-
-function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, addDate){
-	var self = this;
-	
-	self.trackerId = id;
-	self.startMinute = ko.observable(startMinute);
-	self.endMinute = ko.observable(endMinute);
-	self.activity = ko.observable(activity);
-	self.emotion = ko.observable(emotion);
-	self.emotionValue = ko.observable(emotionValue);
-	self.addDate = ko.observable(addDate)
-	
-	self.formattedDate = ko.computed(function(){
-		return new Date(self.addDate()).toDateString();
-	});
-	
-	self.label = ko.computed(function(){
-		return buildTrackerLabel(self.startMinute(), self.endMinute(), self.activity());
-	});
-}
-
 function buildTrackerLabel(startMinute, endMinute, activity){
 	var duration = endMinute - startMinute; 
 	var tokenized = "%a {%d mins}";
 	var trackerLabel = tokenized.replace("%a", (typeof activity == "undefined" || activity.trim() == "" ? defaultActivity : activity));
 	trackerLabel = trackerLabel.replace("%d", duration.toString());
 	return trackerLabel;
-}
-
-function TrackerViewModel(){
-	var self = this;
-	
-	self.trackers = ko.observableArray([]);
-	
-	self.addTracker = function(id, startMinute, endMinute, activity, emotion, emotionValue, addDate){
-		
-		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, addDate));
-	}
-}
-
-function Emotion(name, value, color){
-	var self = this;
-	
-	self.name = ko.observable(name);
-	self.value = ko.observable(value);
-	self.color = ko.observable(color);
-}
-
-function EmotionViewModel(){
-	var self = this;
-	self.emotionValues = ko.observableArray([]);
 }
 
 function resetTrackingInfo()
@@ -159,36 +113,6 @@ function configureTrackNewButton(){
 	});
 }
 
-function configureDataBindings(){
-	ko.applyBindings(model, document.getElementById("olTrackers"));
-	ko.applyBindings(emotionModel, document.getElementById("ddlEmotion"));
-}
-
-function configureAutoComplete(){
-	//configure autocomplete
-	$(function() {
-		var cache = {},
-			lastXhr;
-		$( "#txtActivity" ).autocomplete({
-			minLength: 2,
-			source: function( request, response ) {
-				var term = request.term;
-				if ( term in cache ) {
-					response( cache[ term ] );
-					return;
-				}
-
-				lastXhr = $.getJSON( "autocomplete", request, function( data, status, xhr ) {
-					cache[ term ] = data;
-					if ( xhr === lastXhr ) {
-						response( data );
-					}
-				});
-			}
-		});
-	});
-}
-
 function configureUI(){
 	$("#wrpRunningAvg").hide();
 	$("#txtActivity").attr("placeholder", defaultActivity);
@@ -196,88 +120,6 @@ function configureUI(){
 		var emotion = $("option:selected", $(this)).text();
 		applyDynamicStyles("", emotion);
 	});
-}
-
-var emotionModel = new EmotionViewModel();
-function getLookupData(){
-	$.getJSON("lookup/emotion", function(data, status, xhr){
-		var mappedData = ko.utils.arrayMap(data, function(item){
-			return new Emotion(item["name"], item["value"], item["color"])
-		});
-		
-		emotionModel.emotionValues(mappedData);
-	});
-}
-
-function getTrackers(){
-	$.getJSON("trackers", function(data, status, xhr){
-		var mappedData = ko.utils.arrayMap(data, function(item){
-			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"], item["addDate"]);
-		});
-		
-		model.trackers(mappedData);
-	}).success(function(){
-		updateAverage();
-		model.trackers().forEach(function(tracker){
-			configureTracker(
-				tracker.trackerId, 
-				tracker.startMinute(), 
-				tracker.endMinute(), 
-				tracker.activity(), 
-				tracker.emotion(), 
-				tracker.emotionValue(),
-				tracker.addDate());
-		});
-	});
-}
-
-function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue, trackerId){
-	/*
-	var socket = io.connect(window.location.hostname);
-	
-	socket.emit("saveTrackerInfo", {'startMinute': startMinute, 'endMinute':endMinute, 'activity': activity, 'emotionValue': emotionValue});
-	socket.on("userTrackerUpdate", function(data){
-		//alert(data);
-	});
-	
-	*/
-	
-	$.ajax(
-		{
-			url: "trackers/upsert",
-			type: "POST",
-			dataType: "json",
-			data: {
-				'startMinute': startMinute, 
-				'endMinute':endMinute, 
-				'activity': activity, 
-				'emotion' : emotion, 
-				'emotionValue': parseInt(emotionValue), 
-				"_id": trackerId
-			}
-		}
-	).done(function(data){
-		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
-		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
-		updateAverage();
-		resetTrackingInfo();
-	}).fail(function(jqXHR, textStatus){
-		alert(textStatus);
-	});
-}
-
-function updateAverage(){
-	
-	var effect = "drop";
-	if(model.trackers().length > 1){
-		effect = "highlight";
-	}
-	
-	$( "#wrpRunningAvg" ).show(effect, null, 1000, null );
-	$.getJSON("aggregate/average", function(data, status, xhr){
-		//alert(data.result);
-		$("#wrpAverage").html(data.result);
-	})
 }
 
 //TODO: for time slider implement http://jsbin.com/orora3/3/edit
@@ -341,7 +183,6 @@ function configureChart() {
   });
 }
 
-var model = new TrackerViewModel();
 //setup event handlers
 $(document).ready(function(){
 	
@@ -351,7 +192,8 @@ $(document).ready(function(){
 	configureTrackAnotherButton();
 	configureTrackNewButton();
 	configureAutoComplete();
-	getLookupData();
+	getEmotionLookup();
+	getCategoryLookup();
 	getTrackers();
 	configureChart();
 })
