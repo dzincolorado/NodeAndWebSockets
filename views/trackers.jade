@@ -8,7 +8,9 @@ block content
 		div(class="rightColumn", id="wrpAverage")
 
 	div(style="width:200px;float:right;position:absolute;left:400px;top:32px")
-		div(class="render", id="trackerChart", style="height:200px")
+		div(class="render", id="categoryChart", style="height:200px")
+	div(style="width:200px;float:right;position:absolute;left:400px;top:242px")
+		div(class="render", id="emotionChart", style="height:200px")
 		
 	ol(data-bind="foreach: trackers", class="ui-selectable", id="olTrackers")
 		//- li(class="ui-widget-content")
