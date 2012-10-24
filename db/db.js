@@ -13,6 +13,10 @@ function db2(expressServer){
 	self.emotion = function(){
 		return trackersDb.collection("emotion");	
 	}
+	
+	self.category = function(){
+		return trackersDb.collection("category");
+	}
 }
 
 exports.db2 = db2;

@@ -8,6 +8,9 @@ block content
 	div(class="alert alert-info", id="wrpRunningAvg") Average:
 		div(class="rightColumn", id="wrpAverage")
 
+	div(style="width:200px;float:right;position:absolute;left:400px;top:65px")
+		div(class="render", id="trackerChart", style="height:200px")
+		
 	ol(data-bind="foreach: trackers", class="ui-selectable", id="olTrackers")
 		//- li(class="ui-widget-content")
 		li
@@ -22,6 +25,9 @@ block content
 		div(id="slider-range")
 		div(id="txtMinutes", class="trackerCaption-happy")
 		div(class="sectionSplitter")
+		
+		label(for="ddlCategory") Category:
+			select(id="ddlCategory", data-bind="options: categoryValues, optionsText: 'name', optionsValue: 'value'", class="rightColumn")
 		label(for="txtActivity") Activity:
 			input(type="text", id="txtActivity", class="rightColumn", maxLength="30")
 		div(class="divider")
@@ -29,3 +35,4 @@ block content
 			select(id="ddlEmotion", data-bind="options: emotionValues, optionsText: 'name', optionsValue: 'value'", class="rightColumn")
 			div(class="wrpButton")
 				button(id="btnTrackNew", class="btn btn-primary") Start tracking
+				

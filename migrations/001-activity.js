@@ -1,4 +1,4 @@
-var db = require("../db/db").db();
+var db = require("mongojs").connect(process.env.MONGOLABLIFE_URI);
 
 exports.up = function(next){
 	//activity.save("");
