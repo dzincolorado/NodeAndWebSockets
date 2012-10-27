@@ -90,7 +90,7 @@ function configureTrackAnotherButton(){
 			width: 450
 		});
 
-		$( "#btnTrackAnother" ).click(function() {
+		$( ".btn.btn-primary.another" ).click(function() {
 			$( "#wrpTrackAnother" ).dialog( "open" );
 			return false;
 		});
@@ -159,7 +159,11 @@ function configureCategoryChart() {
     markers: {
       show: true,
       position: 'rm',
+      stackingType: 'b',
+      stacked: false,
+      stroke: false,
       fontSize: 10,
+      horizontal: true,
       labelFormatter : function (o) { return labels[o.index]; }
     }
   });
@@ -177,7 +181,6 @@ function configureCategoryChart() {
       horizontalLines : false
     },
     title: "Time By Category",
-    fontColor: '#37AA37',
   	backgroundColor: '#FFFFFF',
   	fill: false
   });
@@ -241,9 +244,33 @@ function configureEmotionChart() {
   });
 }
 
+function configureCalendar(){
+	$(function() {
+        $( "#datepicker" ).datepicker({
+            numberOfMonths: 3,
+            showButtonPanel: true,
+            defaultDate: new Date(),
+            setDate: new Date(),
+            showOn: "button",
+            buttonImage: "images/calendar.gif",
+            buttonImageOnly: true
+        });
+    });
+    
+    $( "#datepicker" ).val(formatDate(new Date()));
+}
+
+function formatDate(d){
+	var curr_date = d.getDate();
+	var curr_month = d.getMonth() + 1; //Months are zero based
+	var curr_year = d.getFullYear();
+	return curr_month + "/" + curr_date + "/" + curr_year;
+}
+
 //setup event handlers
 $(document).ready(function(){
 	
+	configureCalendar();
 	configureUI();
 	configureDataBindings();
 	configureTracker("", 0, 30);

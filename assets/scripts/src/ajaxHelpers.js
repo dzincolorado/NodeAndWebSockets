@@ -26,7 +26,7 @@ function getTrackers(){
 		
 		model.trackers(mappedData);
 	}).success(function(){
-		updateAverage();
+		updateAggregates();
 		model.trackers().forEach(function(tracker){
 			configureTracker(
 				tracker.trackerId, 
@@ -68,14 +68,14 @@ function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue
 	).done(function(data){
 		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
 		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
-		updateAverage();
+		updateAggregates();
 		resetTrackingInfo();
 	}).fail(function(jqXHR, textStatus){
 		alert(textStatus);
 	});
 }
 
-function updateAverage(){
+function updateAggregates(){
 	
 	var effect = "drop";
 	if(model.trackers().length > 1){
