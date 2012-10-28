@@ -8,12 +8,29 @@ function getResult(aggregationType, sendResponse, expressServer){
 		
 	}
 	else{
+		var db2 = new db.db2(expressServer);
 		switch(aggregationType.trim())
 		{
-			case "average", "category":
-				var db2 = new db.db2(expressServer);
+			case "average":
+				//TODO: refactor into more of strategy
 				db2.userActivity().mapReduce(mapAverage, reduceAverage, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
-					
+					console.log("mapreduce results: %r ".replace("%r", results));
+					if(results != null){
+						results.findOne({}, function(err, result){
+							
+							var avg = 0;
+							if(result != null){
+								console.log("first one" + util.inspect(result.value));
+							
+								avg = result.value.avg;
+							}
+							sendResponse(null, JSON.stringify({result: avg}));
+						});
+					}
+				});	
+				break;
+			case "category":
+				db2.userActivity().mapReduce(mapCategories, reduceCategories, { out : "categoryDuration", query: {category: {$exists:true}}}, function(err, results, stats){
 					console.log("mapreduce results: %r ".replace("%r", results));
 					if(results != null){
 						results.findOne({}, function(err, result){
@@ -41,7 +58,19 @@ function getResult(aggregationType, sendResponse, expressServer){
  */
 
 
-//TODO:  need to account for activity duration
+mapCategories = function(){
+	emit(this.category, {duration: this.endMinute - this.startMinute});
+}
+
+reduceCategories = function(key, values) {
+	var durationSum = 0;
+	values.forEach(function(doc){
+		durationSum += doc.duration;
+	});
+	
+	return {duration: durationSum};
+}
+
 mapAverage = function (){
   emit( "average" , { totalEmotion: parseFloat(this.emotionValue), duration: this.endMinute - this.startMinute, num : 1.0, avg: 0.0 } );
 };

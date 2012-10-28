@@ -1,8 +1,9 @@
-function buildTrackerLabel(startMinute, endMinute, activity){
+function buildTrackerLabel(startMinute, endMinute, activity, category){
 	var duration = endMinute - startMinute; 
-	var tokenized = "%a {%d mins}";
+	var tokenized = "%c: %a {%d mins}";
 	var trackerLabel = tokenized.replace("%a", (typeof activity == "undefined" || activity.trim() == "" ? defaultActivity : activity));
 	trackerLabel = trackerLabel.replace("%d", duration.toString());
+	trackerLabel = trackerLabel.replace("%c", category);
 	return trackerLabel;
 }
 
@@ -10,8 +11,9 @@ function resetTrackingInfo()
 {
 	$("#slider-range" ).slider({values: [0, 30]});
 	$("#txtActivity").val("");
-	$("ddlEmotion").val(emotionModel.emotionValues()[0].value);
-	applyDynamicStyles("", emotionModel.emotionValues()[0].value)
+	$('#ddlEmotion option:first-child').attr("selected", "selected");
+	$('#ddlCategory option:first-child').attr("selected", "selected");
+	applyDynamicStyles("", $('#ddlEmotion').val());
 }
 
 function applyDynamicStyles(id, emotion){
@@ -51,7 +53,7 @@ function getTrackerCaptionAddDateId(id){
 	return "#wrpAddDate" + id;
 }
 
-function configureTracker(id, startMinute, endMinute, activity, emotion, emotionValue){
+function configureTracker(id, startMinute, endMinute, activity, emotion, emotionValue, category){
 	$(function() {
 		var sliderRangeId =getSliderRangeId(id);
 		var txtMinutesId =getTrackerCaptionId(id);
@@ -63,7 +65,7 @@ function configureTracker(id, startMinute, endMinute, activity, emotion, emotion
 			step: 5,
 			values: [ startMinute, endMinute ],
 			slide: function( event, ui ) {
-				$( txtMinutesId ).text(buildTrackerLabel(ui.values[ 0 ], ui.values[ 1 ], activity));
+				$( txtMinutesId ).text(buildTrackerLabel(ui.values[ 0 ], ui.values[ 1 ], activity, category));
 			}
 		});
 		
@@ -72,7 +74,8 @@ function configureTracker(id, startMinute, endMinute, activity, emotion, emotion
 				buildTrackerLabel(
 					$( sliderRangeId ).slider( "values", 0 ), 
 					$( sliderRangeId ).slider( "values", 1 ), 
-					activity));
+					activity,
+					category));
 		}
 		
 		applyDynamicStyles(id, emotion);
@@ -105,8 +108,9 @@ function configureTrackNewButton(){
 		var activity = $("#txtActivity").val();
 		var emotionValue = $("#ddlEmotion").val();
 		var emotion = $("#ddlEmotion option:selected").text();
+		var category = $("#ddlCategory option:selected").text();
 	
-		saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue);
+		saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue, category);
 		
 		$( "#wrpTrackAnother" ).dialog( "close" );
 		return false;

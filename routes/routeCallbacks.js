@@ -74,7 +74,7 @@ function upsert(request, response, expressServer){
 	//following fields were not part of initial migration so they will be created in the collection first time around.
 	newTrackerValue.addDate = new Date();
 	newTrackerValue.modifiedDate = newTrackerValue.addDate;
-	//console.log(typeof newTrackerValue.emotionValue);
+	console.log("new activity: " + newTrackerValue);
 	
 	var db2 = new db.db2(expressServer);
 	db2.userActivity().find({}, function(err, docs){

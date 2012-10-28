@@ -3,7 +3,7 @@ var model = new TrackerViewModel();
 var emotionModel = new EmotionViewModel();
 var categoryModel = new CategoryViewModel();
 
-function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, addDate){
+function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, category, addDate){
 	var self = this;
 	
 	self.trackerId = id;
@@ -13,13 +13,14 @@ function Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, ad
 	self.emotion = ko.observable(emotion);
 	self.emotionValue = ko.observable(emotionValue);
 	self.addDate = ko.observable(addDate)
+	self.category = ko.observable(category);
 	
 	self.formattedDate = ko.computed(function(){
 		return new Date(self.addDate()).toDateString();
 	});
 	
 	self.label = ko.computed(function(){
-		return buildTrackerLabel(self.startMinute(), self.endMinute(), self.activity());
+		return buildTrackerLabel(self.startMinute(), self.endMinute(), self.activity(), self.category());
 	});
 }
 
@@ -28,9 +29,9 @@ function TrackerViewModel(){
 	
 	self.trackers = ko.observableArray([]);
 	
-	self.addTracker = function(id, startMinute, endMinute, activity, emotion, emotionValue, addDate){
+	self.addTracker = function(id, startMinute, endMinute, activity, emotion, emotionValue, category, addDate){
 		
-		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, addDate));
+		self.trackers.push(new Tracker(id, startMinute, endMinute, activity, emotion, emotionValue, category, addDate));
 	}
 }
 

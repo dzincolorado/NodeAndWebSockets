@@ -21,7 +21,7 @@ function getCategoryLookup(){
 function getTrackers(){
 	$.getJSON("trackers", function(data, status, xhr){
 		var mappedData = ko.utils.arrayMap(data, function(item){
-			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"], item["addDate"]);
+			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"], item["category"], item["addDate"]);
 		});
 		
 		model.trackers(mappedData);
@@ -35,12 +35,13 @@ function getTrackers(){
 				tracker.activity(), 
 				tracker.emotion(), 
 				tracker.emotionValue(),
+				tracker.category(),
 				tracker.addDate());
 		});
 	});
 }
 
-function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue, trackerId){
+function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue, category, trackerId){
 	/*
 	var socket = io.connect(window.location.hostname);
 	
@@ -61,13 +62,14 @@ function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue
 				'endMinute':endMinute, 
 				'activity': activity, 
 				'emotion' : emotion, 
-				'emotionValue': parseInt(emotionValue), 
+				'emotionValue': parseInt(emotionValue),
+				'category': category, 
 				"_id": trackerId
 			}
 		}
 	).done(function(data){
-		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
-		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, new Date());
+		model.addTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, category, new Date());
+		configureTracker(data.trackerId, startMinute, endMinute, activity, emotion, emotionValue, category, new Date());
 		updateAggregates();
 		resetTrackingInfo();
 	}).fail(function(jqXHR, textStatus){
