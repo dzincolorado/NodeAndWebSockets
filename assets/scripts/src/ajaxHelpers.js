@@ -88,7 +88,11 @@ function updateAggregates(){
 	$.getJSON("aggregate/average", function(data, status, xhr){
 		//alert(data.result);
 		$("#wrpAverage").html(data.result);
-	})
+	});
+	
+	$.getJSON("aggregate/category", function(data, status, xhr){
+		//configureCategoryChart(data);
+	});
 }
 
 function configureAutoComplete(){

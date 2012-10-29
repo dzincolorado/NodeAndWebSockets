@@ -14,7 +14,6 @@ function getResult(aggregationType, sendResponse, expressServer){
 			case "average":
 				//TODO: refactor into more of strategy
 				db2.userActivity().mapReduce(mapAverage, reduceAverage, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
-					console.log("mapreduce results: %r ".replace("%r", results));
 					if(results != null){
 						results.findOne({}, function(err, result){
 							
@@ -24,24 +23,27 @@ function getResult(aggregationType, sendResponse, expressServer){
 							
 								avg = result.value.avg;
 							}
-							sendResponse(null, JSON.stringify({result: avg}));
+							sendResponse(null, JSON.stringify({'result': avg}));
 						});
 					}
 				});	
 				break;
 			case "category":
 				db2.userActivity().mapReduce(mapCategories, reduceCategories, { out : "categoryDuration", query: {category: {$exists:true}}}, function(err, results, stats){
-					console.log("mapreduce results: %r ".replace("%r", results));
 					if(results != null){
-						results.findOne({}, function(err, result){
-							
-							var avg = 0;
-							if(result != null){
-								console.log("first one" + util.inspect(result.value));
-							
-								avg = result.value.avg;
+						//console.log("mapreduce category 1st results: %r ".replace("%r", util.inspect(results[0])));
+						results.find().toArray(function(err, docs){
+							if(!err){
+								if(docs != null){
+									console.log("mapreduce category results: %r ".replace("%r", util.inspect(docs[0].value)));
+									
+									sendResponse(null, JSON.stringify(docs));
+								}	
 							}
-							sendResponse(null, JSON.stringify({result: avg}));
+							else {
+								console.log(err);
+							}
+								
 						});
 					}
 				});	
