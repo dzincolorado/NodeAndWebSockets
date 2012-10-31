@@ -91,7 +91,7 @@ function updateAggregates(){
 	});
 	
 	$.getJSON("aggregate/category", function(data, status, xhr){
-		//configureCategoryChart(data);
+		configureCategoryChart(data);
 	});
 }
 

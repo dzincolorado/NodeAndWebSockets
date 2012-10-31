@@ -23,8 +23,15 @@ function applyDynamicStyles(id, emotion){
 	var txtTrackerCaptionAddDateId = getTrackerCaptionAddDateId(id);
 	
 	var emotionText = typeof emotion == "undefined" ? "happy" : emotion.replace(" ", "_").toLowerCase();
-	$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
-	$(sliderRangeId + " div").removeClass("ui-widget-header");
+	//$(sliderRangeId + " a").removeClass("ui-slider-handle ui-state-default ui-corner-all .ui-state-default");
+	//$(sliderRangeId + " div").removeClass("ui-widget-header");
+	
+	$(sliderRangeId + " a").removeClass(function(index, css){
+		return (css.match (/\bui-slider-handle ui-state-\S+/g) || []).join(' ');
+	});
+	$(sliderRangeId + " div").removeClass(function(index, css){
+		return (css.match (/\bui-widget-header\S+/g) || []).join(' ');
+	});
 	
 	$(txtMinutesId).removeClass (function (index, css) {
 	    return (css.match (/\btrackerCaption-\S+/g) || []).join(' ');
@@ -128,25 +135,27 @@ function configureUI(){
 
 //TODO: for time slider implement http://jsbin.com/orora3/3/edit
 
-//TODO: configure to use real data:
-
-function configureCategoryChart() {
+function configureCategoryChart(data) {
 
   var container = document.getElementById("categoryChart");
+  var dataParsed = [];
+  var labelsParsed = [];
+  
+  var i = 1;
+  data.timeByCategory.forEach(function(t){
+  	dataParsed.push([[1, i, t.value.duration]]);
+  	labelsParsed.push(t._id + ' ' + t.value.duration + '/' + data.totalDuration);
+  	i++;
+  });
+  
   var
-    d1        = [[1, 4, 10]],
-    d2        = [[1, 5, 4]],
-    d3        = [[1, 3, 2]],
-    d4        = [[1, 2, 9]],
-    d5        = [[1, 1, 8]],
     data      = [],
     timeline  = { show : true, barWidth : .6, fillColor: 'green', color: 'green' },
     markers   = [],
-    labels    = ['Health', 'Education', 'Work', 'Soul Sucking', 'Fun'],
     i, graph, point;
 
   // Timeline
-  Flotr._.each([d1, d2, d3, d4, d5], function (d) {
+  Flotr._.each(dataParsed, function (d) {
     data.push({
       data : d,
       timeline : Flotr._.clone(timeline)
@@ -154,7 +163,7 @@ function configureCategoryChart() {
   });
 
   // Markers
-  Flotr._.each([d1, d2, d3, d4, d5], function (d) {
+  Flotr._.each(dataParsed, function (d) {
     point = d[0];
     markers.push([point[0], point[1]]);
   });
@@ -168,7 +177,7 @@ function configureCategoryChart() {
       stroke: false,
       fontSize: 10,
       horizontal: true,
-      labelFormatter : function (o) { return labels[o.index]; }
+      labelFormatter : function (o) { return labelsParsed[o.index]; }
     }
   });
   
@@ -284,6 +293,5 @@ $(document).ready(function(){
 	getEmotionLookup();
 	getCategoryLookup();
 	getTrackers();
-	configureCategoryChart();
 	configureEmotionChart();
 })

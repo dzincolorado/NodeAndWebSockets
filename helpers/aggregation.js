@@ -8,11 +8,14 @@ function getResult(aggregationType, sendResponse, expressServer){
 		
 	}
 	else{
+		
+		//TODO: refactor into more of strategy
+		//TODO: will need to segment by date
+		//TODO: will need to segment by logged in user
 		var db2 = new db.db2(expressServer);
 		switch(aggregationType.trim())
 		{
 			case "average":
-				//TODO: refactor into more of strategy
 				db2.userActivity().mapReduce(mapAverage, reduceAverage, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
 					if(results != null){
 						results.findOne({}, function(err, result){
@@ -35,9 +38,21 @@ function getResult(aggregationType, sendResponse, expressServer){
 						results.find().toArray(function(err, docs){
 							if(!err){
 								if(docs != null){
-									console.log("mapreduce category results: %r ".replace("%r", util.inspect(docs[0].value)));
+									//console.log("mapreduce category results: %r ".replace("%r", util.inspect(docs[0].value)));
 									
-									sendResponse(null, JSON.stringify(docs));
+									var totalDuration = 0;
+									//get the total duration
+									docs.forEach(function(doc){
+										totalDuration += doc.value.duration;
+									});
+									
+									var timeByCategoryDoc = 
+										{
+											"totalDuration": totalDuration,
+										}
+									timeByCategoryDoc["timeByCategory"] = docs;
+									console.log("sending to stream: " + util.inspect(timeByCategoryDoc));
+									sendResponse(null, JSON.stringify(timeByCategoryDoc));
 								}	
 							}
 							else {
