@@ -135,22 +135,21 @@ function configureUI(){
 
 //TODO: for time slider implement http://jsbin.com/orora3/3/edit
 
-function configureCategoryChart(data) {
+function configureChart(aggregateData, container, title) {
 
-  var container = document.getElementById("categoryChart");
   var dataParsed = [];
   var labelsParsed = [];
   
   var i = 1;
-  data.timeByCategory.forEach(function(t){
+  aggregateData.timeByDimension.forEach(function(t){
   	dataParsed.push([[1, i, t.value.duration]]);
-  	labelsParsed.push(t._id + ' ' + t.value.duration + '/' + data.totalDuration);
+  	labelsParsed.push(t._id + ' ' + t.value.duration + '/' + aggregateData.totalDuration);
   	i++;
   });
   
   var
     data      = [],
-    timeline  = { show : true, barWidth : .6, fillColor: 'green', color: 'green' },
+    timeline  = { show : true, barWidth : .6},
     markers   = [],
     i, graph, point;
 
@@ -193,67 +192,10 @@ function configureCategoryChart(data) {
    	  color: '#37AA37',
       horizontalLines : false
     },
-    title: "Time By Category",
-  	backgroundColor: '#FFFFFF',
-  	fill: false
-  });
-}
-
-function configureEmotionChart() {
-
-  var container = document.getElementById("emotionChart");
-  var
-    d1        = [[1, 4, 3]],
-    d2        = [[1, 5, 4]],
-    d3        = [[1, 3, 2]],
-    d4        = [[1, 2, 9]],
-    d5        = [[1, 1, 8]],
-    data      = [],
-    timeline  = { show : true, barWidth : .6},
-    markers   = [],
-    labels    = ['Angry', 'Sad', 'Love', 'Happy', 'Excited'],
-    i, graph, point;
-
-  // Timeline
-  Flotr._.each([d1, d2, d3, d4, d5], function (d) {
-    data.push({
-      data : d,
-      timeline : Flotr._.clone(timeline)
-    });
-  });
-
-  // Markers
-  Flotr._.each([d1, d2, d3, d4, d5], function (d) {
-    point = d[0];
-    markers.push([point[0], point[1]]);
-  });
-  data.push({
-    data: markers,
-    markers: {
-      show: true,
-      position: 'rm',
-      fontSize: 10,
-      labelFormatter : function (o) { return labels[o.index]; }
-    }
-  });
-  
-  // Draw Graph
-  graph = Flotr.draw(container, data, {
-    xaxis: {
-       showLabels: false
-    },
-    yaxis: {
-      showLabels : false
-    },
-    grid: {
-   	  color: '#37AA37',
-      horizontalLines : false
-    },
-    title: "Time By Emotion",
-    fontColor: '#37AA37',
+    title: title,
   	backgroundColor: '#FFFFFF',
   	fill: false,
-  	colors: ['red', 'green', 'blue', 'brown', 'orange']
+  	colors: aggregateData.colors
   });
 }
 
@@ -293,5 +235,4 @@ $(document).ready(function(){
 	getEmotionLookup();
 	getCategoryLookup();
 	getTrackers();
-	configureEmotionChart();
 })

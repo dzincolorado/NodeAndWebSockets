@@ -91,7 +91,24 @@ function updateAggregates(){
 	});
 	
 	$.getJSON("aggregate/category", function(data, status, xhr){
-		configureCategoryChart(data);
+		data["colors"] = ['green'];
+		configureChart(data, document.getElementById("categoryChart"), "Your time");
+	});
+	
+	$.getJSON("aggregate/emotion", function(data, status, xhr){
+		//map the emotion to the associated colors
+		var colors = [];
+		data.timeByDimension.forEach(function(t){
+			var match = ko.utils.arrayFirst(emotionModel.emotionValues(), function(item){
+				//alert(item.name());
+				return item.name().toString().toLowerCase() === t._id.toLowerCase();
+			});
+			
+			colors.push(match.color());
+		});
+		
+		data["colors"] = colors;
+		configureChart(data, document.getElementById("emotionChart"), "Your emotions");
 	});
 }
 

@@ -32,36 +32,10 @@ function getResult(aggregationType, sendResponse, expressServer){
 				});	
 				break;
 			case "category":
-				db2.userActivity().mapReduce(mapCategories, reduceCategories, { out : "categoryDuration", query: {category: {$exists:true}}}, function(err, results, stats){
-					if(results != null){
-						//console.log("mapreduce category 1st results: %r ".replace("%r", util.inspect(results[0])));
-						results.find().toArray(function(err, docs){
-							if(!err){
-								if(docs != null){
-									//console.log("mapreduce category results: %r ".replace("%r", util.inspect(docs[0].value)));
-									
-									var totalDuration = 0;
-									//get the total duration
-									docs.forEach(function(doc){
-										totalDuration += doc.value.duration;
-									});
-									
-									var timeByCategoryDoc = 
-										{
-											"totalDuration": totalDuration,
-										}
-									timeByCategoryDoc["timeByCategory"] = docs;
-									console.log("sending to stream: " + util.inspect(timeByCategoryDoc));
-									sendResponse(null, JSON.stringify(timeByCategoryDoc));
-								}	
-							}
-							else {
-								console.log(err);
-							}
-								
-						});
-					}
-				});	
+				require('./aggregation/common').getTimeByDimension(aggregationType.trim(), db2, sendResponse, mapCategories, reduceDurationSum, {category: {$exists:true}});
+				break;
+			case "emotion":
+				require('./aggregation/common').getTimeByDimension(aggregationType.trim(), db2, sendResponse, mapEmotion, reduceDurationSum, {emotion: {$exists:true}});
 				break;
 			default:
 				sendResponse(null, JSON.stringify({result: "N/A"}));		
@@ -74,12 +48,8 @@ function getResult(aggregationType, sendResponse, expressServer){
  *
  */
 
-
-mapCategories = function(){
-	emit(this.category, {duration: this.endMinute - this.startMinute});
-}
-
-reduceCategories = function(key, values) {
+//common mapreduce method
+reduceDurationSum = function(key, values) {
 	var durationSum = 0;
 	values.forEach(function(doc){
 		durationSum += doc.duration;
@@ -87,6 +57,19 @@ reduceCategories = function(key, values) {
 	
 	return {duration: durationSum};
 }
+
+//group by category
+mapCategories = function(){
+	emit(this.category, {duration: this.endMinute - this.startMinute});
+}
+
+//group by emotion
+
+mapEmotion = function(){
+	emit(this.emotion, {duration: this.endMinute - this.startMinute});
+}
+
+//simple average related
 
 mapAverage = function (){
   emit( "average" , { totalEmotion: parseFloat(this.emotionValue), duration: this.endMinute - this.startMinute, num : 1.0, avg: 0.0 } );
