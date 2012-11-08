@@ -106,6 +106,18 @@ function upsert(request, response, expressServer){
 	})
 }
 
+function login(request, response)
+{
+	response.render("login", {
+		locals:
+		{
+			'title': "Login",
+			'header': "Login",
+			'user': request.user
+		}
+	})
+}
+
 //TODO: split routeCallbacks into into separate modules
 exports.index = index;
 exports.autoComplete = autoComplete;
@@ -113,3 +125,4 @@ exports.lookup = lookup;
 exports.upsert = upsert;
 exports.aggregate = aggregate;
 exports.getTrackers = getTrackers;
+exports.login = login;

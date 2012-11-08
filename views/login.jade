@@ -1,0 +1,11 @@
+extends layout
+
+block content
+
+	#facebook-login
+	//- a(href='/auth/facebook', style='border: 0px') 
+	<div class="fb-login-button" data-show-faces="false" data-width="400" data-max-rows="1"></div>
+	div(id="fb-root")
+
+block append footer
+	script(type="text/javascript", src="/scripts/src/facebook.js")

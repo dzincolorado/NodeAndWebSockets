@@ -32,6 +32,35 @@ module.exports = function(expressServer, passport){
 	});
 	
 	//index
-	expressServer.get("/", routeCallbacks.index);
+	expressServer.get("/", ensureAuthenticated, routeCallbacks.index);
 	
+	//handle route to facebook auth.
+	expressServer.get("/auth/facebook", passport.authenticate("facebook", {display: 'touch'}), function(request, response){
+		//never called since request is routed to FB
+	});
+	
+	//handle route to call back url
+	expressServer.get("/auth/facebook/callback", 
+		passport.authenticate("facebook", {failureRedirect: "/login"}), function(request, response){
+			response.redirect("/");
+		});	
+	
+	//login
+	expressServer.get("/login", routeCallbacks.login);
+	
+	//logout
+	expressServer.get("/logout", function(request, response){
+		request.logout();
+		response.redirect("/");
+	});
 };
+
+//check for authenticated user
+function ensureAuthenticated(request, response, next){
+	return next(); //uncomment to bypass auth
+	if(request.isAuthenticated()){
+		return next();
+	}
+	response.redirect("/login");
+	
+}
