@@ -57,7 +57,7 @@ module.exports = function(expressServer, passport){
 
 //check for authenticated user
 function ensureAuthenticated(request, response, next){
-	return next(); //uncomment to bypass auth
+	//return next(); //uncomment to bypass auth
 	if(request.isAuthenticated()){
 		return next();
 	}
