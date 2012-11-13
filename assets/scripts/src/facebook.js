@@ -31,7 +31,8 @@ function getFacebookLoginStatus(){
       channelUrl : 'http://nodeandwebsockets.herokuapp.com/channel.html', // Channel File
       status     : true, // check login status
       cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true  // parse XFBML
+      xfbml      : true,  // parse XFBML
+      oauth		 : true
     });
 
     // Additional init code here

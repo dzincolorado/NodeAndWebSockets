@@ -32,6 +32,7 @@ module.exports = function(express, passport){
 	expressServer.use(passport.session());
 	expressServer.use(expressServer.router);
 	expressServer.use(express.static(__dirname + "/../assets"));
+	expressServer.use(express.static(__dirname + "/../public")); //TODO: set maxAge
 	
 	var port = process.env.PORT || 8000;
 	console.log("Listening on: %d, environment: '%s'", port, expressServer.settings.env);
@@ -44,7 +45,7 @@ module.exports = function(express, passport){
 	server.listen(port);
 	
 	//initialize socketio
-	require("./socketioinitialize").init(server);
+	//require("./socketioinitialize").init(server);
 	
 	return expressServer;
 }
