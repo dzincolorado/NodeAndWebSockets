@@ -11,7 +11,6 @@ function facebookLogin() {
 function getFacebookLoginStatus(){
 	// Additional init code here
 	FB.getLoginStatus(function(response) {
-		alert("");
 	    if (response.status === 'connected') {
 	        // connected
 	    } else if (response.status === 'not_authorized') {
