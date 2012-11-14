@@ -5,6 +5,6 @@ var authenticationHelper = require("./helpers/authentication");
 var routeCallbacks = require("./routes/routeCallbacks");
 //TODO: configure cluster processes
 
-authenticationHelper.initPassport(passport, passportFacebookStrategy)
 var expressServer = require("./config/serverInitialize")(express, passport);
+authenticationHelper.initPassport(passport, passportFacebookStrategy)
 require("./routes/router")(expressServer, passport, routeCallbacks);
