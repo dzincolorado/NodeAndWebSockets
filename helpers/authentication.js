@@ -1,6 +1,4 @@
-var config = require("../config/config");
-
-function initPassport(passport, passportFacebookStrategy){
+function initPassport(passport, passportFacebookStrategy, expressServer){
 	passport.serializeUser(function(user, done) {
 	  done(null, user);
 	});
@@ -9,11 +7,14 @@ function initPassport(passport, passportFacebookStrategy){
 	  done(null, obj);
 	});
 	
+	console.log("has keys: " + expressServer.get("facebookConfig"))
+	var facebookConfig = JSON.parse(expressServer.get("facebookConfig"));
+	
 	//Passport using facebook strategy
 	passport.use(new passportFacebookStrategy({
-		clientID:config.facebook.consumerKey,
-		clientSecret:config.facebook.consumerSecret,
-		callbackURL: config.facebook.callbackURL
+		clientID:facebookConfig.facebookKeys.key,
+		clientSecret:facebookConfig.facebookKeys.secret,
+		callbackURL: facebookConfig.facebookKeys.callbackURL
 		},
 		function(token, refreshToken, profile, done){
 			process.nextTick(function()

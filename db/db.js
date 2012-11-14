@@ -17,6 +17,10 @@ function db2(expressServer){
 	self.category = function(){
 		return trackersDb.collection("category");
 	}
+	
+	self.appKey = function(){
+		return trackersDb.collection("appKey");
+	}
 }
 
 exports.db2 = db2;
