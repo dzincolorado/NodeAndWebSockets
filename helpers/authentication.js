@@ -7,14 +7,14 @@ function initPassport(passport, passportFacebookStrategy, expressServer){
 	  done(null, obj);
 	});
 	
-	console.log("has keys: " + expressServer.get("facebookConfig"))
 	var facebookConfig = JSON.parse(expressServer.get("facebookConfig"));
+	console.log("verify callbackurl: " + facebookConfig.callbackURL);
 	
 	//Passport using facebook strategy
 	passport.use(new passportFacebookStrategy({
 		clientID:facebookConfig.facebookKeys.key,
 		clientSecret:facebookConfig.facebookKeys.secret,
-		callbackURL: facebookConfig.facebookKeys.callbackURL
+		callbackURL: facebookConfig.callbackURL
 		},
 		function(token, refreshToken, profile, done){
 			process.nextTick(function()
