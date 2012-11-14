@@ -26,9 +26,10 @@ block content
 			ref.parentNode.insertBefore(js, ref);
 		}(document, /*debug*/ false));
 
-	//- script(type="text/javascript", src="/scripts/src/facebook.js")
-	div(id="fbLogin", class="fb-login-button", data-show-faces="false", data-width="400", data-max-rows="1")
-		img(src="/images/facebooklogin.jpg")
+	script(type="text/javascript", src="/scripts/src/facebook.js")
+	div(class="fb-login-button", data-show-faces="false", data-width="400", data-max-rows="1")
+		a(id="fbLogin")
+			img(src="/images/facebooklogin.jpg")
 
 block append footer
 	script(type="text/javascript", src="/scripts/src/facebookConnect.js")
