@@ -54,3 +54,5 @@
 
 .appendedHeader {position:relative;top:-28px;left:140px;}
 #datepicker {border:0px;box-shadow:none;-webkit-box-shadow:none;-moz-webkit-box-shadow:none;width:100px;font-size:large}
+
+.topRight {position:relative;top-28px;left:300px};
