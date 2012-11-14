@@ -2,7 +2,7 @@ function facebookLogin() {
     FB.login(function(response) {
         if (response.authResponse) {
             // connected
-            alert("connected");
+            window.location = "/auth/facebook/callback";
         } else {
             // cancelled
         }
@@ -24,8 +24,7 @@ function getFacebookLoginStatus(){
 	});
 }
 
-function removethismethodwhenyhouredone()
-{
+
 // Load the SDK's source Asynchronously
   (function(d, debug){
      var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
@@ -50,4 +49,3 @@ function removethismethodwhenyhouredone()
     getFacebookLoginStatus();
 
   };
-}
