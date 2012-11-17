@@ -37,8 +37,8 @@ function getFacebookLoginStatus(){
 // Additional JS functions here
   window.fbAsyncInit = function() {
     FB.init({
-      appId      : '376509982436950', // App ID
-      channelUrl : 'http://nodeandwebsockets.herokuapp.com/channel.html', // Channel File
+      appId      : appId, // App ID
+      channelUrl : cbUrl, // Channel File
       status     : true, // check login status
       cookie     : true, // enable cookies to allow the server to access the session
       xfbml      : true,  // parse XFBML

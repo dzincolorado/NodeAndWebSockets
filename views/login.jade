@@ -1,13 +1,33 @@
 extends layout
 
 block content
-
+	script
+		var appId = "!{locals.appKey}";
+		var cbUrl = "!{locals.callbackUrl}";
+		
 	#facebook-login
 	div(id="fb-root")
 	script(type="text/javascript", src="/scripts/src/facebook.js")
 	div(class="fb-login-button", data-show-faces="false", data-width="400", data-max-rows="1")
 		a(id="fbLogin")
 			img(src="/images/facebooklogin.jpg")
+	
+	//- TODO: implement later
+	div(style="display:none")
+		div Sign In
+			div
+				label(for="txtEmailSignIn")
+				input(type="text", id="txtEmailSignIn")
+			div
+				label(for="txtPasswordSignIn")
+				input(type="password", id="txtPasswordSignIn")	
+		div Sign Up
+			div
+				label(for="txtEmailSignUp")
+				input(type="text", id="txtEmailSignUp")
+			div
+				label(for="txtPasswordSignUp")
+				input(type="password", id="txtPasswordSignUp")	
 
 block append footer
 	script(type="text/javascript", src="/scripts/src/facebookConnect.js")

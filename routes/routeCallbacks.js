@@ -5,7 +5,12 @@ var responseHelper = require("../helpers/response");
 var trackersHelper = require("../helpers/trackers");
 
 function index(request, response){
-	response.render("trackers", {locals: {}});
+	response.render("trackers", {
+		locals: 
+		{
+			username: request.user.username
+		}
+	});
 }
 
 function autoComplete(request, response, expressServer){
@@ -106,14 +111,19 @@ function upsert(request, response, expressServer){
 	})
 }
 
-function login(request, response)
+function login(request, response, expressServer)
 {
+	//from authenthication.js.  TODO: refactor into module
+	console.log("login? " + expressServer.locals.facebookConfig);
+	var facebookConfig = JSON.parse(expressServer.locals.facebookConfig);
+	
 	response.render("login", {
 		locals:
 		{
 			'title': "Login",
 			'header': "Login",
-			'user': request.user
+			'appKey': facebookConfig.facebookKeys.key,
+			'callbackUrl': facebookConfig.facebookKeys.callbackUrl
 		}
 	})
 }

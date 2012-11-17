@@ -46,7 +46,9 @@ module.exports = function(expressServer, passport){
 		});	
 	
 	//login
-	expressServer.get("/login", routeCallbacks.login);
+	expressServer.get("/login", function(request, response){
+		routeCallbacks.login(request, response, expressServer);
+	});
 	
 	//logout
 	expressServer.get("/logout", function(request, response){

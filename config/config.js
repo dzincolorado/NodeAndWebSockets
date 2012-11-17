@@ -7,8 +7,7 @@ function facebook(expressServer, sendConfigSettings) {
 	db2.appKey().findOne({'facebookKeys' : {$exists: true}}, function(err, doc) {
 		console.log("loading FB keys: " + doc.facebookKeys.key);
 		if(!err) {
-			doc.callbackURL = "http://nodeandwebsockets.herokuapp.com/auth/facebook/callback";
-			expressServer.set("facebookConfig", JSON.stringify(doc));
+			expressServer.locals.facebookConfig = JSON.stringify(doc);
 			sendConfigSettings(expressServer);
 		} else {
 			console.log("fb load error: " + err);
