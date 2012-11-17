@@ -6,8 +6,9 @@ block content
 
 	div(class="appendedHeader")
 		input(type="text", id="datepicker")
-		span= "Welcome " + username
-		a(href="/logout", class="topRight") logout
+		div(class="topRight")
+			div(class="username")= "Welcome " + locals.username
+			a(href="/logout") logout
 	div(class="divider")
 
 	div
