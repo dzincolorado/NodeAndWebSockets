@@ -21,6 +21,10 @@ function db2(expressServer){
 	self.appKey = function(){
 		return trackersDb.collection("appKey");
 	}
+	
+	self.facebookUser = function(){
+		return trackersDb.collection("facebookUser")
+	}
 }
 
 exports.db2 = db2;

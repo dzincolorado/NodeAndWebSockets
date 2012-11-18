@@ -1,3 +1,5 @@
+var db = require("../db/db");
+
 function initPassport(passport, passportFacebookStrategy, expressServer){
 	passport.serializeUser(function(user, done) {
 	  done(null, user);
@@ -19,7 +21,22 @@ function initPassport(passport, passportFacebookStrategy, expressServer){
 		function(token, refreshToken, profile, done){
 			process.nextTick(function()
 			{
-				//TODO: create the user record or retrieve it
+				console.log("FB profile: " + profile.username);
+				//create the user record or retrieve it
+				var db2 = new db.db2(expressServer);
+				db2.facebookUser().findOne({'username': profile.username}, function(err, doc){
+					if(!err){
+						if(doc == null){
+							//insert document
+							db2.facebookUser().save(profile);
+						}
+					}
+					else
+					{
+						console.log(err);
+					}
+				})
+				
 				return done(null, profile);
 			});
 		}
