@@ -1,5 +1,5 @@
 function getEmotionLookup(){
-	$.getJSON("lookup/emotion", function(data, status, xhr){
+	$.getJSON("ajax/lookup/emotion", function(data, status, xhr){
 		var mappedData = ko.utils.arrayMap(data, function(item){
 			return new Emotion(item["name"], item["value"], item["color"]);
 		});
@@ -9,7 +9,7 @@ function getEmotionLookup(){
 }
 
 function getCategoryLookup(){
-	$.getJSON("lookup/category", function(data, status, xhr){
+	$.getJSON("ajax/lookup/category", function(data, status, xhr){
 		var mappedData = ko.utils.arrayMap(data, function(item){
 			return new Category(item["name"]);
 		});
@@ -19,7 +19,7 @@ function getCategoryLookup(){
 }
 
 function getTrackers(){
-	$.getJSON("trackers", function(data, status, xhr){
+	$.getJSON("ajax/trackers", function(data, status, xhr){
 		var mappedData = ko.utils.arrayMap(data, function(item){
 			return new Tracker(item["_id"], item["startMinute"], item["endMinute"], item["activity"], item["emotion"], item["emotionValue"], item["category"], item["addDate"]);
 		});
@@ -54,7 +54,7 @@ function saveTrackerInfo(startMinute, endMinute, activity, emotion, emotionValue
 	
 	$.ajax(
 		{
-			url: "trackers/upsert",
+			url: "ajax/trackers/upsert",
 			type: "POST",
 			dataType: "json",
 			data: {
@@ -85,17 +85,17 @@ function updateAggregates(){
 	}
 	
 	$( "#wrpRunningAvg" ).show(effect, null, 1000, null );
-	$.getJSON("aggregate/average", function(data, status, xhr){
+	$.getJSON("ajax/aggregate/average", function(data, status, xhr){
 		//alert(data.result);
 		$("#wrpAverage").html(data.result);
 	});
 	
-	$.getJSON("aggregate/category", function(data, status, xhr){
+	$.getJSON("ajax/aggregate/category", function(data, status, xhr){
 		data["colors"] = ['green'];
 		configureChart(data, document.getElementById("categoryChart"), "Your time");
 	});
 	
-	$.getJSON("aggregate/emotion", function(data, status, xhr){
+	$.getJSON("ajax/aggregate/emotion", function(data, status, xhr){
 		//map the emotion to the associated colors
 		var colors = [];
 		data.timeByDimension.forEach(function(t){
@@ -126,7 +126,7 @@ function configureAutoComplete(){
 					return;
 				}
 
-				lastXhr = $.getJSON( "autocomplete", request, function( data, status, xhr ) {
+				lastXhr = $.getJSON( "ajax/autocomplete", request, function( data, status, xhr ) {
 					cache[ term ] = data;
 					if ( xhr === lastXhr ) {
 						response( data );

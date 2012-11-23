@@ -4,30 +4,32 @@ var routeCallbacks = require("./routeCallbacks");
 
 module.exports = function(expressServer, passport){
 	
+	expressServer.get("/ajax/*", ensureAuthenticated)
+	
 	//autocomplete
-	expressServer.get("/autocomplete", function(request, response){
+	expressServer.get("/ajax/autocomplete", function(request, response){
 			routeCallbacks.autoComplete(request, response, expressServer);
 		});
 	
 	//get lookup
-	expressServer.get("/lookup/:type", function(request, response){
+	expressServer.get("/ajax/lookup/:type", function(request, response){
 		routeCallbacks.lookup(request, response, expressServer);
 		});
 		
 	//get a list of the trackers
 	//TODO: consider using *index* route
-	expressServer.get("/trackers", function(request, response){
+	expressServer.get("/ajax/trackers", function(request, response){
 		routeCallbacks.getTrackers(request, response, expressServer);
 	})
 	
 	//create/update tracker
-	expressServer.post("/trackers/upsert", function(request, response){
+	expressServer.post("/ajax/trackers/upsert", function(request, response){
 		routeCallbacks.upsert(request, response, expressServer);
 	})
 	
 	//get some calculated values
-	expressServer.get("/aggregate/:type", function(request, response){
-		console.log("aggregation time");
+	expressServer.get("/ajax/aggregate/:type", function(request, response){
+		console.log("aggregation time" + require("util").inspect(request));
 		routeCallbacks.aggregate(request, response, expressServer);
 	});
 	
@@ -57,12 +59,22 @@ module.exports = function(expressServer, passport){
 	});
 };
 
+function isXHR(request) {
+    return request.header( 'HTTP_X_REQUESTED_WITH' ) === 'XMLHttpRequest';
+}
+
 //check for authenticated user
 function ensureAuthenticated(request, response, next){
-	//return next(); //uncomment to bypass auth
 	if(request.isAuthenticated()){
 		return next();
 	}
-	response.redirect("/login");
-	
+	if(!isXHR(request)){
+		//return next(); //uncomment to bypass auth
+		response.redirect("/login");	
+	}
+	else
+	{
+		response.write("{message: 'Not Authenticated'}");
+		response.end();	
+	}
 }
