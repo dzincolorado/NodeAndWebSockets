@@ -24,6 +24,7 @@ function initPassport(passport, passportFacebookStrategy, expressServer){
 				console.log("FB profile: " + profile.username);
 				//create the user record or retrieve it
 				var db2 = new db.db2(expressServer);
+				var saveError = null;
 				db2.facebookUser().findOne({'username': profile.username}, function(err, doc){
 					if(!err){
 						if(doc == null){
@@ -33,11 +34,12 @@ function initPassport(passport, passportFacebookStrategy, expressServer){
 					}
 					else
 					{
+						saveError = err;
 						console.log(err);
 					}
-				})
+				});
 				
-				return done(null, profile);
+				return done(saveError, profile);
 			});
 		}
 	

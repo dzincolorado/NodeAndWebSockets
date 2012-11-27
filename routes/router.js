@@ -19,6 +19,7 @@ module.exports = function(expressServer, passport){
 	//get a list of the trackers
 	//TODO: consider using *index* route
 	expressServer.get("/ajax/trackers", function(request, response){
+		console.log("user in ajax request " + request.user.username);
 		routeCallbacks.getTrackers(request, response, expressServer);
 	})
 	
@@ -29,7 +30,6 @@ module.exports = function(expressServer, passport){
 	
 	//get some calculated values
 	expressServer.get("/ajax/aggregate/:type", function(request, response){
-		console.log("aggregation time" + require("util").inspect(request));
 		routeCallbacks.aggregate(request, response, expressServer);
 	});
 	
