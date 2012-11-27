@@ -83,11 +83,11 @@ function upsert(request, response, expressServer){
 	console.log("new activity: " + newTrackerValue);
 	
 	var db2 = new db.db2(expressServer);
-	db2.userActivity().find({}, function(err, docs){
-		console.log("doc count: " + docs.length);
+	db2.userActivity().find({'username': newTrackerValue.username}, function(err, docs){
+		console.log("doc count by username: " + docs.length);
 		
 		//TODO: remove once we no longer need a cap on the collection.  Not using capped collections at this time.
-		if(docs.length > 30)
+		if(docs.length > 15)
 		{
 			//?
 		}
