@@ -13,7 +13,7 @@ function resetTrackingInfo()
 	$("#txtActivity").val("");
 	$('#ddlEmotion option:first-child').attr("selected", "selected");
 	$('#ddlCategory option:first-child').attr("selected", "selected");
-	applyDynamicStyles("", $('#ddlEmotion').val());
+	applyDynamicStyles("", $("#ddlEmotion option:selected").text());
 }
 
 function applyDynamicStyles(id, emotion){
