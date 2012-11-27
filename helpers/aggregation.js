@@ -1,7 +1,7 @@
 var db = require("../db/db");
 var util = require("util");
 
-function getResult(aggregationType, sendResponse, expressServer){
+function getResult(aggregationType, username, sendResponse, expressServer){
 	console.log("aggregation type: %at".replace("%at", aggregationType));
 	
 	if(aggregationType.trim().length = 0){
@@ -11,12 +11,16 @@ function getResult(aggregationType, sendResponse, expressServer){
 		
 		//TODO: refactor into more of strategy
 		//TODO: will need to segment by date
-		//TODO: will need to segment by logged in user
 		var db2 = new db.db2(expressServer);
 		switch(aggregationType.trim())
 		{
 			case "average":
-				db2.userActivity().mapReduce(mapAverage, reduceAverage, { out : "emotionAverage", query: {emotionValue: {$exists:true}}}, function(err, results, stats){
+				db2.userActivity().mapReduce(mapAverage, reduceAverage, 
+					{ 
+						out : "emotionAverage", 
+						query: {emotionValue: {$exists:true}, 'username': username}
+					}, 
+					function(err, results, stats){
 					if(results != null){
 						results.findOne({}, function(err, result){
 							
@@ -32,10 +36,10 @@ function getResult(aggregationType, sendResponse, expressServer){
 				});	
 				break;
 			case "category":
-				require('./aggregation/common').getTimeByDimension(aggregationType.trim(), db2, sendResponse, mapCategories, reduceDurationSum, {category: {$exists:true}});
+				require('./aggregation/common').getTimeByDimension(aggregationType.trim(), db2, sendResponse, mapCategories, reduceDurationSum, {category: {$exists:true}, 'username': username});
 				break;
 			case "emotion":
-				require('./aggregation/common').getTimeByDimension(aggregationType.trim(), db2, sendResponse, mapEmotion, reduceDurationSum, {emotion: {$exists:true}});
+				require('./aggregation/common').getTimeByDimension(aggregationType.trim(), db2, sendResponse, mapEmotion, reduceDurationSum, {emotion: {$exists:true}, 'username': username});
 				break;
 			default:
 				sendResponse(null, JSON.stringify({result: "N/A"}));		

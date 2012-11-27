@@ -47,11 +47,11 @@ function lookup(request, response, expressServer){
 
 function aggregate(request, response, expressServer){
 	var aggregationType = request.params.type;
-	aggregationHelper.getResult(aggregationType, responseHelper.makeSendResponse(response), expressServer);
+	aggregationHelper.getResult(aggregationType, request.user.username, responseHelper.makeSendResponse(response), expressServer);
 }
 
 function getTrackers(request, response, expressServer){
-	trackersHelper.list(responseHelper.makeSendResponse(response), expressServer);
+	trackersHelper.list(request.user.username, responseHelper.makeSendResponse(response), expressServer);
 }
 
 function persistNewActivity(newActivity, expressServer){
@@ -79,6 +79,7 @@ function upsert(request, response, expressServer){
 	//following fields were not part of initial migration so they will be created in the collection first time around.
 	newTrackerValue.addDate = new Date();
 	newTrackerValue.modifiedDate = newTrackerValue.addDate;
+	newTrackerValue.username = request.user.username;
 	console.log("new activity: " + newTrackerValue);
 	
 	var db2 = new db.db2(expressServer);
